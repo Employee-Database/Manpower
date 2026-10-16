@@ -326,7 +326,7 @@
 			</div>
 			<div class="report-grid">
 				<div class="report-card metric-clickable" data-metric="summaryTotal" role="button" tabindex="0" aria-label="View all records"><h3>Total records</h3><div id="summaryTotal" class="metric">0</div><div class="metric-label">all loaded employee records</div></div>
-				<div class="report-card metric-clickable" data-metric="summaryComplete" role="button" tabindex="0" aria-label="View complete records"><h3>Complete records</h3><div id="summaryComplete" class="metric">0</div><div class="metric-label">records with every field filled</div></div>
+				<div class="report-card metric-clickable" data-metric="summaryComplete" role="button" tabindex="0" aria-label="View complete employee records"><h3>Complete records</h3><div id="summaryComplete" class="metric">0</div><div class="metric-label">records with required employee fields filled</div></div>
 				<div class="report-card metric-clickable" data-metric="summaryFields" role="button" tabindex="0" aria-label="View tracked fields"><h3>Fields tracked</h3><div id="summaryFields" class="metric">0</div><div class="metric-label">columns in the current dataset</div></div>
 				<div class="report-card report-wide"><h3 id="summaryGroupTitle">All records by department</h3>
 					<select id="summaryGroupBy" aria-label="Group all records by"><option value="department">All records by department</option><option value="division">All records by division</option></select>
@@ -334,7 +334,7 @@
 					<label class="chart-filter-label" for="summaryDepartmentPositionSelect" id="summaryPositionLabel">Job positions in selected department</label>
 					<select id="summaryDepartmentPositionSelect"><option value="">Select a department above</option></select>
 					<div id="summaryPositionChart"></div></div>
-				<div class="report-card"><h3>All records by status</h3><div id="summaryStatusChart"></div></div>
+				<div class="report-card"><h3>All records by employment type</h3><div id="summaryStatusChart"></div></div>
 				<div class="report-card"><h3>All records by gender</h3><div id="summaryGenderChart"></div></div>
 			</div>
 		</section>
@@ -381,7 +381,7 @@
 			'POSITION', 'DEPARTMENT', 'DIVISION', 'BIRTHDAY (MM/DD/YYYY)',
 			'CONTACT NO.', 'EMAIL ADDRESS', 'HIRING DATE', 'YEAR HIRED', 'GENDER',
 			'EMPLOYMENT TYPE', 'COMPLETE ADDRESS', 'TIN NO.', 'PHILHEALTH NO.',
-			'SSS NO.', 'PAGIBIG NO.',
+			'SSS NO.', 'PAGIBIG NO.', 'OVERALL MONTHLY COMPENSATION',
 			'DATE OF 1ST EVAL', 'DATE OF 2ND EVAL', 'DATE OF REGULARIZATION'
 		];
 		let rows = [], columns = [], editing = -1, sort = { key: '', dir: 1 };
@@ -477,6 +477,21 @@
 		const fieldValue = (row, terms) => {
 			const key = fieldName(row, terms);
 			return key ? String(row[key] ?? '').trim() : '';
+		};
+		// A record is complete when core employee identity and employment fields are present.
+		// Optional government IDs, compensation, evaluation dates, and regularization date do not
+		// make an otherwise usable employee record incomplete. Supports both split and legacy names.
+		const isCompleteEmployeeRecord = row => {
+			const employeeNumber = fieldValue(row, ['employee number', 'employee no', 'employee id', 'new emp #', 'emp #']);
+			const lastName = fieldValue(row, ['last name', 'surname']);
+			const firstName = fieldValue(row, ['first name', 'given name']);
+			const fullName = fieldValue(row, ['full name', 'employee name']);
+			const hasName = Boolean((lastName && firstName) || fullName);
+			const position = fieldValue(row, ['position', 'new designation/position', 'designation', 'job title']);
+			const department = fieldValue(row, ['department', 'new division']);
+			const hiringDate = fieldValue(row, ['hiring date', 'hire date']);
+			const employmentType = fieldValue(row, ['employment type', 'employment status', 'status']);
+			return Boolean(employeeNumber && hasName && position && department && hiringDate && employmentType);
 		};
 		// Like fieldValue(), but returns the RAW cell value (number, Date, or string)
 		// instead of stringifying it first. Needed anywhere we're going to parse the
@@ -751,7 +766,7 @@
 				if (target === 'summaryDepartmentChart') return rows.filter(hasData).filter(row => summaryGroup(row) === label);
 				if (target === 'summaryPositionChart') { const group = $('summaryDepartmentPositionSelect').value; const terms = summarySubTerms(); return rows.filter(hasData).filter(row => summaryGroup(row) === group && (fieldValue(row, terms) || 'Unassigned') === label); }
 				if (target.startsWith('summary')) {
-					const terms = target.includes('Department') ? ['department', 'new division', 'division'] : target.includes('Position') ? ['position', 'new designation/position', 'designation', 'job title', 'job'] : target.includes('Status') ? ['employment status', 'status'] : ['gender', 'sex'];
+					const terms = target.includes('Department') ? ['department', 'new division', 'division'] : target.includes('Position') ? ['position', 'new designation/position', 'designation', 'job title', 'job'] : target.includes('Status') ? ['employment type', 'employment status'] : ['gender', 'sex'];
 					return rows.filter(hasData).filter(row => (fieldValue(row, terms) || (terms[0].includes('department') ? 'Unassigned' : 'Unspecified')) === label);
 				}
 				const range = currentReportRange();
@@ -828,7 +843,7 @@
 				if (key === 'evaluations') { openRecordsDialog('Evaluations', rows.filter(row => hiredThisWeek(row) && (isUpcomingEval(row, ['date of 1st eval', '1st eval']) || isUpcomingEval(row, ['date of 2nd eval', '2nd eval'])))); return; }
 				if (key === 'regularizations') { openRecordsDialog('Regularizations', rows.filter(row => hiredThisWeek(row) && fieldValue(row, ['date of regularization', 'regularization']) && !isAlreadyRegular(row))); return; }
 				if (key === 'summaryTotal') { openRecordsDialog('All records', rows.filter(hasData)); return; }
-				if (key === 'summaryComplete') { openRecordsDialog('Complete records', rows.filter(hasData).filter(row => columns.length && columns.every(column => String(row[column] ?? '').trim() !== ''))); return; }
+				if (key === 'summaryComplete') { openRecordsDialog('Complete records', rows.filter(row => hasData(row) && isCompleteEmployeeRecord(row))); return; }
 				if (key === 'summaryFields') {
 					// Not a set of employee rows — this metric is a column count, so
 					// show the tracked field names themselves instead of records.
@@ -845,9 +860,9 @@
 			const summaryRows = rows.filter(hasData);
 			const divisionMissing = summaryGroupMode() === 'division' && !hasDivisionColumn();
 			const departments = divisionMissing ? {} : summaryRows.reduce((counts, row) => { const v = summaryGroup(row); counts[v] = (counts[v] || 0) + 1; return counts; }, {});
-			const statuses = countValues(['employment status', 'status'], 'Unspecified', summaryRows);
+			const employmentTypes = summaryRows.reduce((counts, row) => { const raw = fieldValue(row, ['employment type', 'employment status', 'status']).trim(); const normalized = raw.toUpperCase().replace(/[\s_]+/g, '-'); if (normalized === 'PROBATIONARY') counts['PROBATIONARY'] = (counts['PROBATIONARY'] || 0) + 1; else if (normalized === 'PROJECT-BASED') counts['PROJECT-BASED'] = (counts['PROJECT-BASED'] || 0) + 1; else if (normalized === 'REGULAR') counts['REGULAR'] = (counts['REGULAR'] || 0) + 1; return counts; }, {});
 			const genders = countValues(['gender', 'sex'], 'Unspecified', summaryRows);
-			const complete = summaryRows.filter(row => columns.length && columns.every(column => String(row[column] ?? '').trim() !== '')).length;
+			const complete = summaryRows.filter(isCompleteEmployeeRecord).length;
 			$('summaryTotal').textContent = summaryRows.length;
 			$('summaryComplete').textContent = complete;
 			$('summaryFields').textContent = columns.length;
@@ -859,7 +874,7 @@
 			} else {
 				chart('summaryDepartmentChart', departments, '#1769aa');
 			}
-			chart('summaryStatusChart', statuses, '#2e8b57');
+			chart('summaryStatusChart', employmentTypes, '#2e8b57');
 			chart('summaryGenderChart', genders, '#d17b00');
 			updateSummaryPositionView();
 		};
@@ -970,7 +985,7 @@
 			'PHILHEALTH NO.': ['PHILHEALTH NO.', 'PHILHEALTH NO', 'PHILHEALTH NUMBER'],
 			'SSS NO.': ['SSS NO.', 'SSS NO', 'SSS NUMBER'],
 			'PAGIBIG NO.': ['PAGIBIG NO.', 'PAGIBIG NO', 'PAG-IBIG NO.', 'PAG-IBIG NO', 'PAGIBIG NUMBER'],
-			'MONTHLY COMPENSATION': ['MONTHLY COMPENSATION', 'MONTHLY SALARY', 'COMPENSATION'],
+			'OVERALL MONTHLY COMPENSATION': ['OVERALL MONTHLY COMPENSATION', 'MONTHLY COMPENSATION', 'MONTHLY SALARY', 'COMPENSATION'],
 			'DATE OF 1ST EVAL': ['DATE OF 1ST EVAL', 'DATE OF FIRST EVAL', '1ST EVAL DATE'],
 			'DATE OF 2ND EVAL': ['DATE OF 2ND EVAL', 'DATE OF SECOND EVAL', '2ND EVAL DATE'],
 			'DATE OF REGULARIZATION': ['DATE OF REGULARIZATION', 'REGULARIZATION DATE']
