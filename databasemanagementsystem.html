@@ -165,8 +165,6 @@
 		.chart-row { cursor: pointer; }
 		.chart-row:focus-visible { outline: 3px solid #087f8c55; outline-offset: 2px; }
 		.chart-filter-label { margin-top: 18px; }
-		#departmentPositionSelect, #summaryDepartmentPositionSelect { width: 100%; margin-bottom: 12px; background: var(--select-hl-bg); border-color: var(--select-hl-border); font-weight: 600; }
-		#departmentPositionSelect:not(:disabled):hover, #summaryDepartmentPositionSelect:not(:disabled):hover { border-color: var(--teal); background: var(--select-hl-hover); }
 		#summaryGroupBy { width: 100%; margin-bottom: 12px; background: var(--select-hl-bg); border-color: var(--select-hl-border); font-weight: 600; }
 		#summaryGroupBy:hover { border-color: var(--teal); background: var(--select-hl-hover); }
 		.report-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
@@ -222,13 +220,131 @@
 		#summaryView .chart-row { margin: 3px 0; gap: 6px; font-size: .8rem; }
 		#summaryView .bar-track { height: 9px; }
 		#summaryView .chart-filter-label { margin-top: 10px; margin-bottom: 4px; font-size: .78rem; }
-		#summaryView #summaryDepartmentPositionSelect { margin-bottom: 6px; padding: 6px 9px; font-size: .85rem; }
 		#summaryView #summaryGroupBy { margin-bottom: 6px; padding: 6px 9px; font-size: .85rem; }
 		#summaryView .report-note { margin-top: 6px; font-size: .8rem; }
+		/* Refined visual system: quieter surfaces, stronger hierarchy, consistent controls. */
+		:root {
+			color-scheme: light;
+			--ink: #17313f;
+			--muted: #637783;
+			--navy: #12364a;
+			--teal: #087f83;
+			--line: #dce6ea;
+			--soft: #f7fafb;
+			--danger: #b33d46;
+			--page-bg-1: #f2f6f7;
+			--page-bg-2: #f7f9fa;
+			--page-bg-3: #edf4f4;
+			--panel-bg: #fff;
+			--panel-border: #e1e9ec;
+			--panel-shadow: rgba(20, 48, 64, .06);
+			--field-bg: #fff;
+			--field-border: #cbd9df;
+			--th-bg: #eef4f6;
+			--row-hover: #f1f8f8;
+			--dialog-bg: #fff;
+			--dialog-backdrop: rgba(12, 34, 46, .48);
+			--records-even: #f8fafb;
+			--records-hover: #edf7f6;
+		}
+		body { line-height: 1.5; background: linear-gradient(160deg, #f2f6f7 0%, #f8fafb 58%, #eef5f4 100%); }
+		header { padding: 25px clamp(20px, 5vw, 72px) 27px; background: linear-gradient(112deg, #102f43 0%, #154a59 100%); border-bottom: 3px solid #38b8ad; }
+		.header-inner { max-width: 1560px; margin: 0 auto; }
+		.brand { gap: 16px; }
+		.brand-logo { height: 52px; }
+		header h1 { font-size: clamp(1.55rem, 2.7vw, 2.1rem); letter-spacing: -.025em; }
+		header p { font-size: .91rem; color: #c6d9df; }
+		main { max-width: 1600px; margin: 28px auto 44px; padding: 0 clamp(14px, 2.2vw, 30px); }
+		.tabs { align-items: center; gap: 6px; margin-bottom: 18px; padding: 7px; border: 1px solid var(--panel-border); border-radius: 14px; background: #fff; box-shadow: 0 5px 18px rgba(20,48,64,.045); }
+		.employee-source-picker { margin: 0 auto 0 0; padding: 4px 5px 4px 9px; border-radius: 10px; box-shadow: none; }
+		.employee-source-picker:hover { box-shadow: none; }
+		.employee-source-picker label { font-size: .68rem; letter-spacing: .055em; }
+		.employee-source-picker label::before { width: 22px; height: 22px; }
+		.employee-source-picker select { min-height: 36px; border-radius: 7px; font-size: .84rem; }
+		.tab { min-height: 40px; padding: 9px 16px; border-radius: 9px; font-size: .9rem; font-weight: 650; }
+		.tab.active { background: var(--navy); box-shadow: 0 2px 7px rgba(18,54,74,.18); }
+		.tab:hover { transform: none; }
+		.panel { margin-bottom: 18px; padding: clamp(17px, 2vw, 26px); border-radius: 16px; box-shadow: 0 8px 26px var(--panel-shadow); }
+		.toolbar { gap: 10px; }
+		input[type="text"], input[type="number"], input[type="file"], input[type="week"], select { min-height: 42px; border-radius: 9px; padding: 9px 12px; }
+		input:focus, select:focus { outline: 3px solid rgba(8,127,131,.14); border-color: var(--teal); }
+		button { min-height: 40px; padding: 9px 15px; border-radius: 9px; background: var(--teal); box-shadow: 0 2px 5px rgba(8,127,131,.12); }
+		button:hover { filter: brightness(.97); transform: translateY(-1px); }
+		button.secondary { background: #edf3f5; color: #244657; box-shadow: none; }
+		button.secondary:hover { background: #e4edef; }
+		button.danger { background: var(--danger); box-shadow: none; }
+		button:focus-visible { outline: 3px solid rgba(8,127,131,.28); outline-offset: 2px; }
+		.hint, .report-note { line-height: 1.55; }
+		.stats { margin: 0 0 12px auto; padding: 6px 10px; border: 1px solid #e2eaed; border-radius: 999px; background: #f6f9fa; font-size: .8rem; font-weight: 650; }
+		.table-wrap { max-height: 68vh; border: 1px solid #dfe8eb; border-radius: 12px; scrollbar-color: #afc2c9 #f4f7f8; scrollbar-width: thin; }
+		table { min-width: 820px; }
+		th, td { padding: 11px 13px; }
+		th { z-index: 1; background: #edf4f6; color: #28495a; border-bottom: 1px solid #cfdee3; font-size: .72rem; letter-spacing: .055em; }
+		tbody tr:nth-child(even) td { background: #fbfcfd; }
+		tbody tr:hover td { background: #f0f8f7; }
+		.actions { align-items: center; gap: 7px; }
+		.actions button { min-height: 32px; padding: 6px 10px; font-size: .78rem; }
+		.empty { padding: 48px 20px; }
+		.report-grid { gap: 15px; }
+		.report-card { border-color: #e1e9ec; border-radius: 13px; padding: 18px; background: #fff; box-shadow: 0 3px 12px rgba(20,48,64,.035); }
+		.report-card:hover { border-color: #bad3d5; box-shadow: 0 8px 20px rgba(20,48,64,.075); transform: translateY(-1px); }
+		.report-card h3 { margin-bottom: 11px; font-size: .96rem; letter-spacing: -.01em; }
+		.metric { color: #087f83; font-size: 2.05rem; line-height: 1.15; letter-spacing: -.035em; }
+		.metric-label { display: inline-block; margin-top: 5px; line-height: 1.4; }
+		.report-card.metric-clickable .metric-label::after { font-size: .78em; }
+		.chart-row { min-height: 34px; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr) 42px; }
+		.bar-track { height: 10px; background: #e8eff1; }
+		.bar { background: #168f8b; }
+		.chart-row:hover { background: #f0f7f7; }
+		.chart-row:focus-visible, .gender-department-row:focus-visible { outline-color: #168f8b; }
+		.report-toolbar { margin-bottom: 18px; }
+		.report-toolbar label { color: #405c6a; font-size: .84rem; }
+		.report-toolbar select, .report-toolbar input[type="month"], .report-toolbar input[type="week"] { min-height: 40px; border: 1px solid var(--field-border); border-radius: 9px; padding: 8px 11px; }
+		#departmentFilter, #genderFilter, .records-filter-row select { min-height: 42px; border-color: var(--field-border); border-radius: 9px; }
+		#departmentFilter:focus, #genderFilter:focus { box-shadow: 0 0 0 3px rgba(8,127,131,.12); }
+		#clearTableFilters { box-shadow: none; }
+		#summaryGroupBy { border-radius: 9px; }
+		.gender-department-row { min-height: 38px; }
+		.gender-department-row:hover { background: #f0f7f7; }
+		dialog { border-radius: 16px; box-shadow: 0 24px 70px rgba(9,31,43,.25); }
+		#editor form { max-height: 86vh; overflow: auto; padding: 27px; }
+		form h2, #summaryView h2 { letter-spacing: -.025em; }
+		label { color: #395462; font-size: .88rem; }
+		form input, form select { min-height: 42px; border: 1px solid var(--field-border); border-radius: 9px; padding: 9px 11px; }
+		.form-actions { position: sticky; bottom: -27px; padding: 14px 0 0; background: var(--dialog-bg); }
+		.records-dialog-content { border-top-width: 4px; }
+		.records-dialog-header h2 { letter-spacing: -.025em; }
+		#recordsDialog th { background: #173b50; }
+		#summaryView .report-grid { gap: 15px; }
+		#summaryView .report-card { padding: 17px; }
+		#summaryView .report-card h3 { margin-bottom: 8px; font-size: .92rem; }
+		#summaryView .metric { font-size: 1.85rem; }
+		#summaryView .metric-label { font-size: .8rem; }
+		#summaryView .chart-row { margin: 3px -7px; gap: 8px; font-size: .84rem; }
+		#summaryView .bar-track { height: 9px; }
+		#summaryView .report-note { font-size: .83rem; }
+		@media (max-width: 720px) {
+			.tabs { align-items: stretch; }
+			.employee-source-picker { flex-basis: 100%; margin: 0; }
+			.tab { flex: 1; }
+			.report-toolbar { align-items: stretch; }
+			.report-toolbar .period-control { justify-content: space-between; }
+			.report-toolbar button { width: 100%; margin-left: 0; }
+			.stats { width: 100%; margin: 2px 0 0; border-radius: 9px; }
+		}
+		@media (max-width: 520px) {
+			header { padding: 20px 16px 22px; }
+			.brand-logo { height: 42px; }
+			main { margin-top: 18px; }
+			.panel { padding: 15px; border-radius: 13px; }
+			.report-card, #summaryView .report-card { padding: 15px; }
+			#editor form { padding: 20px; }
+			.form-actions { bottom: -20px; }
+		}
 		@media print {
 			*, *::before, *::after { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 			body { background: white; color: #1c2b3a; }
-			header, .tabs, .data-view, #summaryView, .report-toolbar label, #reportWeek, #reportDepartment, #reportPosition, #printReport, .chart-filter-label, #departmentPositionSelect, #summaryDepartmentPositionSelect, .employee-source-picker { display: none !important; }
+			header, .tabs, .data-view, #summaryView, .report-toolbar label, #reportWeek, #reportDepartment, #reportPosition, #printReport, .employee-source-picker { display: none !important; }
 			main { max-width: none; margin: 0; padding: 0; }
 			#reportView { display: block !important; padding: 0; margin: 0; box-shadow: none; }
 			#reportView::before { content: '1Life Manpower Report'; display: block; margin-bottom: 18px; font-size: 1.5rem; font-weight: bold; color: #173b67; }
@@ -238,6 +354,210 @@
 			.metric-label, .report-note { color: #526574 !important; }
 			.bar-track { background: #d5e4e7 !important; }
 			.bar { opacity: 1 !important; }
+		}
+		[hidden] { display: none !important; }
+		main.app-shell { display: grid; grid-template-columns: 252px minmax(0,1fr); align-items: start; gap: 22px; max-width: 1640px; margin: 26px auto 44px; padding: 0 clamp(14px,2.2vw,30px); }
+		.workspace-content { min-width: 0; }
+		.tabs.sidebar { position: sticky; top: 20px; z-index: 5; display: flex; flex-direction: column; align-items: stretch; gap: 22px; min-height: min(620px,calc(100vh - 40px)); margin: 0; padding: 23px 16px 16px; border: 1px solid var(--panel-border); border-radius: 16px; background: var(--panel-bg); box-shadow: 0 8px 26px var(--panel-shadow); }
+		.sidebar-heading { padding: 2px 7px 0; }
+		.section-kicker { margin: 0 0 6px; color: var(--teal); font-size: .68rem; font-weight: 800; letter-spacing: .12em; line-height: 1.3; }
+		.sidebar-heading h2 { margin: 0; color: var(--navy); font-family: 'Space Grotesk',sans-serif; font-size: 1.15rem; letter-spacing: -.025em; }
+		.employee-source-picker { display: flex; flex-direction: column; align-items: stretch; gap: 7px; width: 100%; margin: 0; padding: 13px 12px; border: 1px solid var(--line); border-radius: 11px; background: #f9fbfc; }
+		.employee-source-picker label { font-size: .68rem; letter-spacing: .07em; }
+		.employee-source-picker label::before { display: none; }
+		.employee-source-picker select { width: 100%; min-width: 0; min-height: 40px; padding-left: 10px; border: 1px solid var(--field-border); background-color: #fff; font-size: .84rem; }
+		.sidebar-nav { display: grid; gap: 6px; }
+		.sidebar .tab { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 46px; padding: 10px 12px; border: 1px solid transparent; border-radius: 10px; background: transparent; box-shadow: none; color: #506975; text-align: left; font-size: .9rem; font-weight: 650; }
+		.sidebar .tab:hover { background: #f2f7f8; color: var(--navy); transform: none; }
+		.sidebar .tab.active { border-color: #d8e9e8; background: #eaf4f3; color: var(--navy); box-shadow: inset 3px 0 0 var(--teal); }
+		.sidebar .tab:focus-visible { outline: 3px solid rgba(8,127,131,.2); outline-offset: 2px; }
+		.nav-icon { display: grid; width: 25px; height: 25px; flex: 0 0 25px; place-items: center; border-radius: 7px; background: #edf3f5; color: #58717d; }
+		.sidebar .tab.active .nav-icon { background: #d6ebea; color: var(--teal); }
+		.nav-icon svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+		.sidebar-footer { display: flex; align-items: center; gap: 9px; margin-top: auto; padding: 13px 8px 3px; border-top: 1px solid #e8eef0; color: var(--muted); font-size: .77rem; font-weight: 600; }
+		.sidebar-footer-dot, .directory-badge span { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 0 3px rgba(8,127,131,.12); }
+		.workspace-content > .panel { margin-bottom: 18px; }
+		.panel.source-panel, .panel.table-panel, #reportView, #summaryView { padding: clamp(20px,2.2vw,30px); }
+		.view-intro { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; margin-bottom: 22px; }
+		.view-intro h2, .table-heading h2 { margin: 0; color: var(--navy); font-family: 'Space Grotesk',sans-serif; font-size: clamp(1.3rem,1.9vw,1.65rem); letter-spacing: -.035em; line-height: 1.2; }
+		.view-intro p:not(.section-kicker) { max-width: 680px; margin: 7px 0 0; color: var(--muted); font-size: .88rem; }
+		.directory-badge { display: inline-flex; align-items: center; gap: 9px; margin-top: 5px; padding: 8px 11px; border: 1px solid #dcebea; border-radius: 999px; background: #f4f9f8; color: #386268; font-size: .75rem; font-weight: 700; white-space: nowrap; }
+		.source-actions { gap: 9px; }
+		.source-actions .sync-note { flex-basis: 100%; margin-top: 2px; padding-top: 12px; border-top: 1px solid #edf1f3; font-size: .81rem; }
+		.table-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+		.table-heading .section-kicker { margin-bottom: 5px; }
+		.table-heading h2 { font-size: 1.22rem; }
+		.table-heading .stats { width: auto; margin: 0; white-space: nowrap; }
+		.table-toolbar { margin-bottom: 14px; }
+		.table-toolbar #search { min-width: 220px; }
+		.table-wrap { max-height: 66vh; }
+		.report-intro, .summary-intro { margin-bottom: 20px; }
+		#summaryView .summary-intro .report-note { margin: 6px 0 0; }
+		#reportView .report-toolbar { justify-content: flex-start; padding: 13px; border: 1px solid #e6edef; border-radius: 12px; background: #f8fafb; }
+		#reportView .report-toolbar button { margin-left: auto; }
+		.report-card { box-shadow: 0 3px 14px rgba(20,48,64,.045); }
+		@media (max-width: 980px) {
+			main.app-shell { grid-template-columns: 220px minmax(0,1fr); gap: 16px; }
+			.tabs.sidebar { padding: 20px 12px 14px; }
+			.employee-source-picker { padding: 11px 10px; }
+			.table-toolbar { align-items: stretch; }
+			.table-toolbar #search { flex-basis: 100%; }
+		}
+		@media (max-width: 720px) {
+			main.app-shell { display: block; margin-top: 16px; }
+			.tabs.sidebar { position: static; min-height: 0; gap: 14px; margin-bottom: 16px; padding: 14px; }
+			.sidebar-heading { display: none; }
+			.employee-source-picker { flex-direction: row; align-items: center; justify-content: space-between; gap: 12px; }
+			.employee-source-picker label { flex: 0 0 auto; }
+			.employee-source-picker select { flex: 1; width: auto; }
+			.sidebar-nav { grid-template-columns: repeat(3,minmax(0,1fr)); }
+			.sidebar .tab { justify-content: center; min-height: 43px; gap: 8px; padding: 8px; }
+			.sidebar-footer { display: none; }
+			.report-toolbar { align-items: stretch; }
+			.report-toolbar .period-control { justify-content: space-between; }
+			.report-toolbar button { width: 100%; margin-left: 0; }
+			.table-heading { align-items: flex-start; flex-direction: column; }
+			.table-heading .stats { width: auto; max-width: 100%; white-space: normal; }
+		}
+		@media (max-width: 520px) {
+			main.app-shell { margin-top: 14px; }
+			.panel.source-panel, .panel.table-panel, #reportView, #summaryView { padding: 17px; }
+			.view-intro { flex-direction: column; gap: 12px; margin-bottom: 18px; }
+			.directory-badge { margin: 0; }
+			.source-actions button, .table-toolbar #search, .table-toolbar select, .table-toolbar button { width: 100%; }
+			.source-actions .sync-note { width: 100%; }
+			.sidebar-nav { gap: 5px; }
+			.sidebar .tab { flex-direction: column; gap: 4px; min-height: 58px; font-size: .75rem; }
+			.sidebar .tab.active { box-shadow: inset 0 -3px 0 var(--teal); }
+			.nav-icon { width: 23px; height: 23px; flex-basis: 23px; }
+		}
+		/* Report charts: consistent labels, proportional fills, and readable values. */
+		.panel { border-color: #cfdee3; }
+		.report-card { border-color: #ccdde2; }
+		.report-card:hover { border-color: #83b8b8; }
+		.bar-detail-panel { border-color: #c8dcdf; border-left-color: var(--teal); }
+		.table-wrap { border-color: #cfdee3; }
+		/* Employee tables stay contained, readable, and anchored while scrolling. */
+		.table-wrap { min-width: 0; overscroll-behavior: contain; }
+		.table-wrap table { width: max-content; min-width: 100%; }
+		.table-wrap th { white-space: normal; line-height: 1.35; }
+		.table-wrap td { vertical-align: middle; }
+		.table-wrap .table-index-col { width: 64px; min-width: 64px; max-width: 64px; text-align: center; }
+		.table-wrap .table-primary-col { min-width: 190px; max-width: 260px; white-space: normal; overflow-wrap: anywhere; }
+		.table-wrap .table-email-col { min-width: 190px; max-width: 250px; white-space: normal; overflow-wrap: anywhere; }
+		.table-wrap .table-address-col { min-width: 210px; max-width: 300px; white-space: normal; overflow-wrap: anywhere; }
+		.table-wrap .table-date-col { min-width: 130px; max-width: 150px; }
+		.table-wrap th.table-index-col, .table-wrap th.table-primary-col { position: sticky; left: 0; z-index: 4; }
+		.table-wrap td.table-index-col, .table-wrap td.table-primary-col { position: sticky; left: 0; z-index: 2; background: #fff; box-shadow: 1px 0 0 #dce6ea; }
+		.table-wrap tbody tr:nth-child(even) td.table-index-col, .table-wrap tbody tr:nth-child(even) td.table-primary-col { background: #f8fafb; }
+		.table-wrap tbody tr:hover td.table-index-col, .table-wrap tbody tr:hover td.table-primary-col { background: #edf7f6; }
+		.table-wrap th.table-index-col, .table-wrap th.table-primary-col { background: var(--navy); color: #fff; }
+		#recordsDialog { width: min(96vw, 1640px); max-height: 90dvh; overflow: hidden; }
+		#recordsDialog .records-dialog-content { display: flex; flex-direction: column; width: 100%; max-height: 90dvh; min-height: 0; }
+		#recordsDialog .records-dialog-header { flex: 0 0 auto; margin-bottom: 14px; }
+		#recordsDialog .table-wrap { flex: 1 1 auto; min-height: 180px; max-height: none; border-radius: 10px; }
+		#recordsDialog table { width: max-content; min-width: max(100%, 1120px); }
+		#recordsDialog th { position: sticky; top: 0; z-index: 2; padding: 10px 12px; white-space: normal; line-height: 1.35; }
+		#recordsDialog td { padding: 9px 12px; font-size: .86rem; line-height: 1.4; }
+		#recordsDialog th.table-index-col, #recordsDialog th.table-primary-col { z-index: 4; }
+		#recordsDialog td.table-index-col, #recordsDialog td.table-primary-col { z-index: 3; }
+		#recordsDialog .empty { position: static; }
+		@media (max-width: 700px) {
+			#recordsDialog { width: calc(100vw - 20px); max-height: 94dvh; }
+			#recordsDialog .records-dialog-content { max-height: 94dvh; padding: 16px; }
+			#recordsDialog .records-dialog-header { flex-direction: column; align-items: stretch; gap: 10px; }
+			#recordsDialog .records-dialog-header > button { align-self: flex-end; }
+			#recordsDialog .records-filter-row { display: grid; grid-template-columns: 1fr 1fr; }
+			#recordsDialog .records-filter-row select { min-width: 0; width: 100%; }
+			#recordsDialog .records-filter-row button { grid-column: 1 / -1; }
+			#recordsDialog .table-wrap { min-height: 140px; }
+		}
+		#reportView .report-card h3, #summaryView .report-card h3 { margin-bottom: 14px; color: #244657; font-size: .93rem; font-weight: 700; }
+		.chart-hint { margin: -8px 0 10px; color: #7a8b93; font-size: .74rem; }
+		.report-grid .chart-row {
+			display: grid;
+			grid-template-columns: minmax(90px,1.15fr) minmax(70px,2fr) 42px;
+			align-items: center;
+			gap: 12px;
+			min-height: 40px;
+			margin: 3px 0;
+			padding: 6px 8px;
+			border: 1px solid transparent;
+			border-radius: 9px;
+			background: transparent;
+			transform: none;
+			transition: background-color .16s ease, border-color .16s ease;
+		}
+		.report-grid .chart-label { min-width: 0; overflow-wrap: anywhere; color: #455f6b; font-size: .82rem; font-weight: 600; line-height: 1.35; }
+		.report-grid .bar-track { position: relative; width: 100%; height: 9px; overflow: hidden; border: 0; border-radius: 999px; background: #eaf0f2; }
+		.report-grid .bar { min-width: 0; border-radius: inherit; background: var(--bar-color,var(--teal)); box-shadow: inset 0 1px rgba(255,255,255,.24); transition: width .42s cubic-bezier(.2,.7,.2,1); }
+		.report-grid .chart-value { min-width: 36px; padding: 3px 6px; border: 1px solid #e7edef; border-radius: 7px; background: #f7fafb; color: #35515f; font-size: .77rem; font-variant-numeric: tabular-nums; font-weight: 700; text-align: center; }
+		.report-grid .chart-row:hover { border-color: #e5edef; background: #f8fbfb; transform: none; }
+		.report-grid .chart-row:hover .bar { filter: brightness(.98); transform: none; }
+		.report-grid .chart-row:focus-visible { outline: 3px solid rgba(8,127,131,.2); outline-offset: 1px; }
+		.report-grid .chart-row[aria-expanded="true"] { border-color: #d8e9e8; background: #f2f8f7; }
+		.bar-detail-panel { margin: 2px 8px 12px 10px; padding: 12px 14px 13px; border: 1px solid #e4edef; border-left: 3px solid var(--teal); border-radius: 0 11px 11px 0; background: #f8fbfb; animation: detail-reveal .18s ease-out; }
+		.bar-detail-heading { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 7px; }
+		.bar-detail-title { display: flex; align-items: baseline; flex-wrap: wrap; gap: 7px; min-width: 0; color: #355361; font-size: .83rem; font-weight: 750; }
+		.bar-detail-title span { color: var(--muted); font-size: .72rem; font-weight: 600; }
+		.bar-detail-heading button { min-height: 31px; padding: 5px 9px; font-size: .72rem; white-space: nowrap; }
+		.bar-detail-panel .chart-row { margin: 2px 0; }
+		@keyframes detail-reveal { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+		.gender-department-note { margin: -4px 0 12px; color: var(--muted); font-size: .8rem; }
+		.gender-department-row {
+			display: grid;
+			grid-template-columns: minmax(120px,.85fr) minmax(210px,1.35fr) minmax(110px,1fr);
+			align-items: center;
+			gap: 14px;
+			min-height: 62px;
+			margin: 0;
+			padding: 11px 8px;
+			border: 0;
+			border-bottom: 1px solid #edf1f3;
+			border-radius: 0;
+			background: transparent;
+			transform: none;
+			transition: background-color .16s ease;
+		}
+		.gender-department-row:last-child { border-bottom: 0; }
+		.gender-department-row:hover { background: #f8fbfb; transform: none; }
+		.gender-department-row:focus-visible { outline: 3px solid rgba(8,127,131,.2); outline-offset: 1px; }
+		.gender-department-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; }
+		.gender-department-name { overflow-wrap: anywhere; color: #355361; font-size: .83rem; font-weight: 700; }
+		.gender-department-total { flex: 0 0 auto; color: #71848d; font-size: .7rem; font-variant-numeric: tabular-nums; font-weight: 650; }
+		.gender-counts { display: flex; flex-wrap: wrap; gap: 6px; }
+		.gender-count { display: inline-flex; align-items: center; gap: 5px; padding: 4px 7px; border: 1px solid #e9eef0; border-radius: 7px; background: #fff; color: #617580; font-size: .69rem; white-space: nowrap; }
+		.gender-count strong { margin-left: 1px; color: #344f5c; font-size: .72rem; font-variant-numeric: tabular-nums; }
+		.gender-count .gender-dot { width: 7px; height: 7px; flex: 0 0 7px; margin: 0; box-shadow: none; }
+		.gender-dot.male { background: #1769aa; }
+		.gender-dot.female { background: #d17b00; }
+		.gender-dot.other { background: #7b61a8; }
+		.gender-department-row .total-bar { display: flex; width: 100%; height: 10px; overflow: hidden; border: 1px solid #e5ecee; border-radius: 999px; background: #edf2f4; }
+		.gender-department-row .total-bar span { display: block; flex: 0 0 auto; height: 100%; transition: width .35s ease; }
+		.gender-department-row .total-bar .male-bar { background: #1769aa; }
+		.gender-department-row .total-bar .female-bar { background: #d17b00; }
+		.gender-department-row .total-bar .other-bar { background: #7b61a8; }
+		@media (max-width: 760px) {
+			.gender-department-row { grid-template-columns: minmax(0,1fr) auto; gap: 8px 12px; }
+			.gender-department-heading { grid-column: 1 / -1; }
+			.gender-counts { grid-column: 1 / -1; }
+			.gender-department-row .total-bar { grid-column: 1 / -1; }
+		}
+		@media (max-width: 520px) {
+			.report-grid .chart-row { grid-template-columns: minmax(70px,1fr) minmax(55px,1.35fr) 36px; gap: 8px; min-height: 38px; padding: 5px 4px; }
+			.report-grid .chart-label { font-size: .76rem; }
+			.report-grid .chart-value { min-width: 32px; padding: 3px 4px; font-size: .72rem; }
+			.bar-detail-panel { margin-right: 0; margin-left: 6px; padding: 10px; }
+			.bar-detail-heading { align-items: flex-start; gap: 8px; }
+			.bar-detail-heading button { padding: 5px 7px; font-size: .67rem; }
+		}
+		@media print {
+			header, .tabs.sidebar { display: none !important; }
+			main.app-shell { display: block; max-width: none; margin: 0; padding: 0; }
+			.workspace-content { width: 100%; }
+			#reportView .report-intro { display: block !important; }
+			#reportView .report-toolbar { display: none !important; }
+			.bar-detail-panel { animation: none; }
 		}
 	</style>
 </head>
@@ -253,41 +573,53 @@
 			</div>
 		</div>
 	</header>
-	<main>
-		<nav class="tabs" aria-label="Database views">
+	<main class="app-shell">
+		<nav class="tabs sidebar" aria-label="Database views">
+			<div class="sidebar-heading">
+				<p class="section-kicker">WORKSPACE</p>
+				<h2>Navigation</h2>
+			</div>
 			<div class="employee-source-picker" title="Choose which employee database to display">
-				<label for="employeeSource">Employee Database</label>
+				<label for="employeeSource">Employee database</label>
 				<select id="employeeSource" aria-label="Choose employee database">
 					<option value="ACTIVE MASTERLIST">Active Employees</option>
 					<option value="1CURE EMPLOYEES">1Cure Employees</option>
 				</select>
 			</div>
-			<button class="tab active" data-tab="dataView">Employees</button>
-			<button class="tab" data-tab="reportView">Reports</button>
-			<button class="tab" data-tab="summaryView">Summary</button>
-		</nav>
-		<section class="panel data-view">
-			<div class="toolbar">
-				<button id="loadSheet" class="secondary">🔄 Load from Google Sheet</button>
-				<button id="autoRefreshToggle" class="secondary">▶️ Start auto-refresh</button>
-				<button id="clear" class="secondary">Clear data</button>
-				<p id="syncNote" class="hint sync-note"></p>
+			<div class="sidebar-nav">
+				<button class="tab active" data-tab="dataView"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5h16M4 12h16M4 18.5h16"/><circle cx="7" cy="5.5" r="1"/><circle cx="7" cy="12" r="1"/><circle cx="7" cy="18.5" r="1"/></svg></span><span>Employees</span></button>
+				<button class="tab" data-tab="reportView"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19.5h16M6.5 16V11m5 5V5m5 11V8"/></svg></span><span>Reports</span></button>
+				<button class="tab" data-tab="summaryView"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4.5" y="4.5" width="6" height="6" rx="1"/><rect x="13.5" y="4.5" width="6" height="6" rx="1"/><rect x="4.5" y="13.5" width="6" height="6" rx="1"/><rect x="13.5" y="13.5" width="6" height="6" rx="1"/></svg></span><span>Summary</span></button>
 			</div>
-			<p class="hint">Data loads directly from the connected Google Sheet. Click "Load from Google Sheet" or turn on auto-refresh to keep it in sync.</p>
+			
+		</nav>
+		<div class="workspace-content">
+		<section class="panel data-view source-panel">
+			<div class="view-intro">
+				<div><p class="section-kicker">PEOPLE OPERATIONS</p><h2>Employee directory</h2><p></p></div>
+				
+			</div>
+			<div class="toolbar source-actions">
+				<button id="loadSheet" class="secondary">Load from Google Sheet</button>
+				<button id="autoRefreshToggle" class="secondary">Start auto-refresh</button>
+				<button id="clear" class="secondary">Clear data</button>
+				<p id="syncNote" class="hint sync-note">Data loads directly from your connected Google Sheet.</p>
+			</div>
 		</section>
-		<section class="panel data-view">
-			<div class="toolbar">
-				<input id="search" type="text" placeholder="Search all employee fields...">
+		<section class="panel data-view table-panel">
+			<div class="table-heading"><div><p class="section-kicker">DIRECTORY</p><h2>Employee records</h2></div><span id="stats" class="stats"></span></div>
+			<div class="toolbar table-toolbar">
+				<input id="search" type="text" placeholder="Search employee records...">
 				<select id="departmentFilter" aria-label="Filter by department"><option value="">All Departments</option></select>
 				<select id="genderFilter" aria-label="Filter by gender"><option value="">All Genders</option></select>
 				<button id="clearTableFilters" type="button" class="secondary">Clear filters</button>
-				<span id="stats" class="stats"></span>
 			</div>
 			<div class="table-wrap">
 				<table><thead id="head"></thead><tbody id="body"></tbody></table>
 			</div>
 		</section>
 		<section id="reportView" class="panel" hidden>
+			<div class="view-intro report-intro"><div><p class="section-kicker">WORKFORCE INSIGHTS</p><h2>Manpower reports</h2><p>Track hiring activity and workforce trends for the selected period.</p></div></div>
 			<div class="report-toolbar">
 				<div class="period-control">
 					<label for="reportPeriod">Report period</label>
@@ -311,33 +643,30 @@
 				<div class="report-card metric-clickable" data-metric="hires" role="button" tabindex="0" aria-label="View records for new hires"><h3>New hires</h3><div id="reportHires" class="metric">0</div><div class="metric-label">hiring dates in selected week</div></div>
 				<div class="report-card metric-clickable" data-metric="evaluations" role="button" tabindex="0" aria-label="View records for evaluations"><h3>Evaluations</h3><div id="reportEvaluations" class="metric">0</div><div class="metric-label">1st and 2nd evaluations due</div></div>
 				<div class="report-card metric-clickable" data-metric="regularizations" role="button" tabindex="0" aria-label="View records for regularizations"><h3>Regularizations</h3><div id="reportRegularizations" class="metric">0</div><div class="metric-label">regularization dates in selected week</div></div>
-				<div class="report-card report-wide"><h3>Weekly hires by department</h3><div id="departmentChart"></div><label class="chart-filter-label" for="departmentPositionSelect">Job positions in selected department</label><select id="departmentPositionSelect"><option value="">Select a department above</option></select><div id="departmentPositionChart"></div></div>
+				<div class="report-card report-wide"><h3>Weekly hires by department</h3><p class="chart-hint">Click a department bar to expand its job positions.</p><div id="departmentChart"></div></div>
 				<div class="report-card"><h3>Weekly hires by status</h3><div id="statusChart"></div></div>
 				<div class="report-card"><h3 id="genderChartTitle">Weekly hires by gender</h3><div id="genderChart"></div></div>
-				<div class="report-card report-wide"><h3 id="genderDepartmentTitle">Gender by department</h3><p class="gender-department-note">Male and female counts for employees hired in the selected period.</p><div id="genderDepartmentChart"></div></div>
+				<div class="report-card report-wide"><h3 id="genderDepartmentTitle">Gender by department</h3><p class="gender-department-note">Gender mix for employees hired in the selected period.</p><div id="genderDepartmentChart"></div></div>
 				<div class="report-card report-wide"><h3>Activity by day</h3><div id="dayChart"></div></div>
 				<div class="report-card"><h3>Event mix</h3><div id="eventChart"></div></div>
 				<div class="report-card report-wide"><h3>Hiring trend</h3><div id="trendChart"></div></div>
 			</div>
 		</section>
 		<section id="summaryView" class="panel" hidden>
-			<div class="report-toolbar">
-				<div><h2>All records summary</h2><p class="report-note">Summary of employee records that have a name.</p></div>
-			</div>
+			<div class="view-intro summary-intro"><div><p class="section-kicker">WORKFORCE OVERVIEW</p><h2>Employee summary</h2><p class="report-note"></p></div></div>
 			<div class="report-grid">
-				<div class="report-card metric-clickable" data-metric="summaryTotal" role="button" tabindex="0" aria-label="View all named records"><h3>Total records</h3><div id="summaryTotal" class="metric">0</div><div class="metric-label">employee records with a name</div></div>
+				<div class="report-card metric-clickable" data-metric="summaryTotal" role="button" tabindex="0" aria-label="View all named records"><h3>Total records</h3><div id="summaryTotal" class="metric">0</div><div class="metric-label">employee records</div></div>
 				<div class="report-card metric-clickable" data-metric="summaryComplete" role="button" tabindex="0" aria-label="View complete employee records"><h3>Complete records</h3><div id="summaryComplete" class="metric">0</div><div class="metric-label">records with required employee fields filled</div></div>
 				<div class="report-card metric-clickable" data-metric="summaryFields" role="button" tabindex="0" aria-label="View tracked fields"><h3>Fields tracked</h3><div id="summaryFields" class="metric">0</div><div class="metric-label">columns in the current dataset</div></div>
-				<div class="report-card report-wide"><h3 id="summaryGroupTitle">All records by department</h3>
+				<div class="report-card report-wide"><h3 id="summaryGroupTitle">All records by department</h3><p class="chart-hint">Click a bar to expand its breakdown.</p>
 					<select id="summaryGroupBy" aria-label="Group all records by"><option value="department">All records by department</option><option value="division">All records by division</option></select>
 					<div id="summaryDepartmentChart"></div>
-					<label class="chart-filter-label" for="summaryDepartmentPositionSelect" id="summaryPositionLabel">Job positions in selected department</label>
-					<select id="summaryDepartmentPositionSelect"><option value="">Select a department above</option></select>
-					<div id="summaryPositionChart"></div></div>
+				</div>
 				<div class="report-card"><h3>All records by employment type</h3><div id="summaryStatusChart"></div></div>
 				<div class="report-card"><h3>All records by gender</h3><div id="summaryGenderChart"></div></div>
 			</div>
 		</section>
+		</div>
 	</main>
 	<dialog id="editor"><form id="form"><h2 id="formTitle">Edit employee</h2><div id="fields"></div><div class="form-actions"><button type="button" class="secondary" id="cancel">Cancel</button><button>Save employee</button></div></form></dialog>
 	<dialog id="recordsDialog"><div class="records-dialog-content"><div class="records-dialog-header"><div><h2 id="recordsTitle">Matching records</h2><p id="recordsCount" class="report-note"></p>
@@ -356,6 +685,7 @@
 		let currentSheetName = 'ACTIVE MASTERLIST';
 		const SHEET_METADATA_URL = () => `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}?fields=sheets.properties(sheetId,title)&key=${SHEETS_API_KEY}`;
 		const normalizeSheetTitle = value => String(value ?? '').replace(/\u00A0/g, ' ').trim().toLocaleUpperCase();
+		const is1CureSheet = () => normalizeSheetTitle(currentSheetName) === '1CURE EMPLOYEES';
 		const getActualSheetTitle = async () => {
 			const metadataResponse = await fetch(`${SHEET_METADATA_URL()}&_=${Date.now()}`, { cache: 'no-store' });
 			const metadata = await metadataResponse.json().catch(() => ({}));
@@ -381,10 +711,20 @@
 			'POSITION', 'DEPARTMENT', 'DIVISION', 'BIRTHDAY (MM/DD/YYYY)',
 			'CONTACT NO.', 'EMAIL ADDRESS', 'HIRING DATE', 'YEAR HIRED', 'GENDER',
 			'EMPLOYMENT TYPE', 'COMPLETE ADDRESS', 'TIN NO.', 'PHILHEALTH NO.',
-			'SSS NO.', 'PAGIBIG NO.', 'OVERALL MONTHLY COMPENSATION',
+			'SSS NO.', 'PAGIBIG NO.',
+			
 			'DATE OF 1ST EVAL', 'DATE OF 2ND EVAL', 'DATE OF REGULARIZATION'
 		];
+		const cureColumns = [
+			'#', 'STATUS', 'NEW EMP #', 'FULL NAME (Surname, First, Middle)',
+			'DESIGNATION/POSITION', 'DEPARTMENT', 'BIRTHDAY (MM/DD/YYYY)', 'CONTACT NO.',
+			'EMAIL ADDRESS', 'HIRING DATE', 'YEAR HIRED', 'GENDER', 'EMPLOYMENT STATUS',
+			'COMPLETE ADDRESS', 'TIN NO.', 'PHILHEALTH NO.', 'SSS NO.', 'PAG-IBIG NO.',
+			'DATE OF 1ST EVAL', 'DATE OF 2ND EVAL',
+			'DATE OF REGULARIZATION', 'ENCODED BY & DATE'
+		];
 		let rows = [], columns = [], editing = -1, sort = { key: '', dir: 1 };
+		let selectedDepartmentForPosition = '', selectedSummaryGroupForPosition = '';
 		const cellKey = value => value instanceof Date ? (Number.isNaN(value.getTime()) ? 'Invalid Date' : value.toISOString()) : String(value ?? '').trim();
 		// Preserve every non-empty employee row from the source sheet. Do not silently
 		// deduplicate records: two legitimate employees can have identical field values.
@@ -416,8 +756,18 @@
 			return (!department || tableFilterValue(rowDepartment(row)) === tableFilterValue(department)) &&
 				(!gender || tableFilterValue(rowGender(row)) === tableFilterValue(gender));
 		};
+		const tableColumnClass = (column, index) => {
+			const key = String(column ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+			const classes = [];
+			if (index === 0) classes.push(key === '' ? 'table-index-col' : 'table-primary-col');
+			if (key.includes('email')) classes.push('table-email-col');
+			if (key.includes('address')) classes.push('table-address-col');
+			if (key.includes('birthday') || key.includes('hiringdate') || key.includes('eval') || key.includes('regularization') || key.includes('date')) classes.push('table-date-col');
+			return classes.join(' ');
+		};
 
 		const draw = () => { const query = $('search').value.toLowerCase(); let view = rows.map((r, i) => ({ r, i }))
+				.filter(x => hasEmployeeName(x.r))
 				.filter(x => matchesMainFilters(x.r))
 				.filter(x => Object.values(x.r).join(' ').toLowerCase().includes(query));
 			if (sort.key) {
@@ -437,10 +787,9 @@
 				}
 			}
 			const namedVisible = view.filter(x => hasEmployeeName(x.r)).length;
-			const namedTotal = countableRows().length;
-			$('stats').textContent = `${namedVisible} of ${namedTotal} named employee${namedTotal === 1 ? '' : 's'} (${view.length} rows shown)`;
-			$('head').innerHTML = columns.length ? `<tr>${columns.map(c => `<th data-key="${esc(c)}">${esc(c)} ${sort.key === c ? (sort.dir > 0 ? '▲' : '▼') : ''}</th>`).join('')}<th>Actions</th></tr>` : '';
-			$('body').innerHTML = view.length ? view.map(x => `<tr>${columns.map(c => `<td>${esc(formatCell(x.r[c], c))}</td>`).join('')}<td class="actions"><button data-edit="${x.i}">Edit</button><button class="danger" data-delete="${x.i}">Delete</button></td></tr>`).join('') : `<tr><td class="empty" colspan="${columns.length + 1}">${rows.length ? 'No matching employees.' : 'Click "Load from Google Sheet" to begin.'}</td></tr>`;
+			$('stats').textContent = `${namedVisible} active employee${namedVisible === 1 ? '' : 's'}`;
+			$('head').innerHTML = columns.length ? `<tr>${columns.map((c, i) => `<th class="${tableColumnClass(c, i)}" data-key="${esc(c)}">${esc(c)} ${sort.key === c ? (sort.dir > 0 ? '▲' : '▼') : ''}</th>`).join('')}<th>Actions</th></tr>` : '';
+			$('body').innerHTML = view.length ? view.map(x => `<tr>${columns.map((c, i) => `<td class="${tableColumnClass(c, i)}">${esc(formatCell(x.r[c], c, true))}</td>`).join('')}<td class="actions"><button data-edit="${x.i}">Edit</button><button class="danger" data-delete="${x.i}">Delete</button></td></tr>`).join('') : `<tr><td class="empty" colspan="${columns.length + 1}">${rows.length ? (countableRows().length ? 'No matching employees.' : 'No named employee records to display.') : 'Click "Load from Google Sheet" to begin.'}</td></tr>`;
 			updateReports();
 			updateDepartmentPositionView();
 			updateSummary();
@@ -448,8 +797,8 @@
 		const esc = value => String(value ?? '').replace(/[&<>"']/g, character => ({
 			'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
 		}[character]));
-		const formatCell = (value, column) => {
-			// For any recognized date column, always render as YYYY-MM-DD — using the
+		const formatCell = (value, column, forTable = false) => {
+			// For recognized date columns, use a consistent display format while using the
 			// same dateValue() parser that reports/summary rely on, so the table,
 			// the edit form, and the analytics all agree on the same calendar day.
 			// Every date in this app is anchored to UTC midnight (see dateValue), so
@@ -460,6 +809,7 @@
 				const parsed = dateValue(value);
 				if (parsed) {
 					const y = parsed.getUTCFullYear(), m = parsed.getUTCMonth() + 1, d = parsed.getUTCDate();
+					if (forTable && /birthday|date of birth|\bdob\b/i.test(column)) return `${String(m).padStart(2, '0')}/${String(d).padStart(2, '0')}/${y}`;
 					return `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
 				}
 			}
@@ -486,9 +836,13 @@
 			return key ? String(row[key] ?? '').trim() : '';
 		};
 		// A record is complete when core employee identity and employment fields are present.
-		// Optional government IDs, compensation, evaluation dates, and regularization date do not
+		// Optional government IDs, evaluation dates, and regularization date do not
 		// make an otherwise usable employee record incomplete. Supports both split and legacy names.
 		const isCompleteEmployeeRecord = row => {
+			if (is1CureSheet()) {
+				return cureColumns.filter(column => column !== '#')
+					.every(column => String(row[column] ?? '').trim() !== '');
+			}
 			const employeeNumber = fieldValue(row, ['employee number', 'employee no', 'employee id', 'new emp #', 'emp #']);
 			const lastName = fieldValue(row, ['last name', 'surname']);
 			const firstName = fieldValue(row, ['first name', 'given name']);
@@ -525,8 +879,8 @@
 		const summaryGroup = row => summaryGroupMode() === 'division'
 			? (rowDivision(row) || 'Unassigned')
 			: (fieldValue(row, ['department', 'new division', 'division']) || 'Unassigned');
-		// What the second dropdown breaks each group into: departments under a
-		// division, or job positions under a department.
+		// What the inline detail chart breaks each group into: departments under
+		// a division, or job positions under a department.
 		const summarySubTerms = () => summaryGroupMode() === 'division'
 			? ['department', 'new division', 'division']
 			: ['position', 'new designation/position', 'designation', 'job title', 'job'];
@@ -669,36 +1023,69 @@
 			};
 
 			const isGenderChart = target === 'genderChart' || target === 'summaryGenderChart';
+			const isExpandableChart = target === 'departmentChart' || target === 'summaryDepartmentChart';
 
 			$(target).innerHTML = entries.map(([label, count]) => {
 				const barColor = isGenderChart ? genderColor(label) : color;
+				const share = max ? Math.max(0, Math.min(100, count / max * 100)) : 0;
 				return `
-				<div class="chart-row" data-chart="${target}" data-label="${esc(label)}" role="button" tabindex="0" aria-label="View records for ${esc(label)}">
-					<span>${esc(label)}</span>
-					<div class="bar-track"><div class="bar" style="width:${count / max * 100}%;background:${barColor}"></div></div>
-					<strong>${count}</strong>
+				<div class="chart-row" data-chart="${target}" data-label="${esc(label)}" role="button" tabindex="0" aria-expanded="false" aria-label="${isExpandableChart ? `Show breakdown for ${esc(label)}` : `View ${count} records for ${esc(label)}`}">
+					<span class="chart-label">${esc(label)}</span>
+					<div class="bar-track" aria-hidden="true"><div class="bar" style="width:${share}%;--bar-color:${barColor}"></div></div>
+					<strong class="chart-value">${Number(count).toLocaleString()}</strong>
 				</div>`;
 			}).join('');
 		};
-		const updateDepartmentPositionView = () => { const select = $('departmentPositionSelect'); const departments = [...document.querySelectorAll('#departmentChart .chart-row')].map(row => row.dataset.label); const current = select.value; select.replaceChildren(new Option(departments.length ? 'Select a department above' : 'No departments available', '')); select.disabled = !departments.length; if (!departments.length) { $('departmentPositionChart').innerHTML = '<p class="report-note">No departments available for this week.</p>'; return; } const selectedDepartment = departments.includes(current) ? current : ''; departments.forEach(department => select.append(new Option(department, department))); select.value = selectedDepartment; if (!selectedDepartment) { $('departmentPositionChart').innerHTML = '<p class="report-note">Select a department to view its job positions.</p>'; return; } const range = currentReportRange(); const positions = {}; countableRows().forEach(row => { const department = fieldValue(row, ['department', 'new division', 'division']); const hired = rowDateInRange(row, ['hiring date', 'hire date'], range); if (hired && department === selectedDepartment) { const position = fieldValue(row, ['position', 'new designation/position', 'designation', 'job title', 'job']) || 'Unassigned'; positions[position] = (positions[position] || 0) + 1; } }); chart('departmentPositionChart', positions, '#4f7cac'); };
-		// Second dropdown in the Summary tab. In Department mode it lists job
-		// positions under the chosen department; in Division mode it lists the
-		// departments under the chosen division.
+		const updateDepartmentPositionView = () => {
+			const chartContainer = $('departmentChart');
+			const departmentRows = [...chartContainer.querySelectorAll(':scope > .chart-row')];
+			const departments = departmentRows.map(row => row.dataset.label);
+			chartContainer.querySelector(':scope > .bar-detail-panel')?.remove();
+			if (!departments.includes(selectedDepartmentForPosition)) selectedDepartmentForPosition = '';
+			departmentRows.forEach(row => {
+				const expanded = row.dataset.label === selectedDepartmentForPosition;
+				row.setAttribute('aria-expanded', String(expanded));
+				row.setAttribute('aria-label', `${expanded ? 'Hide' : 'Show'} job positions for ${row.dataset.label}`);
+			});
+			if (!selectedDepartmentForPosition) return;
+			const selectedRow = departmentRows.find(row => row.dataset.label === selectedDepartmentForPosition);
+			const detail = document.createElement('div');
+			detail.className = 'bar-detail-panel';
+			detail.innerHTML = `<div class="bar-detail-heading"><div class="bar-detail-title">Job positions <span>in ${esc(selectedDepartmentForPosition)}</span></div><button type="button" class="secondary" data-view-chart-records="departmentChart" data-view-chart-label="${esc(selectedDepartmentForPosition)}">View employee records</button></div><div id="departmentPositionChart"></div>`;
+			selectedRow.insertAdjacentElement('afterend', detail);
+			const range = currentReportRange();
+			const positions = {};
+			countableRows().forEach(row => {
+				const department = fieldValue(row, ['department', 'new division', 'division']) || 'Unassigned';
+				const hired = rowDateInRange(row, ['hiring date', 'hire date'], range);
+				if (!hired || department !== selectedDepartmentForPosition) return;
+				const position = fieldValue(row, ['position', 'new designation/position', 'designation', 'job title', 'job']) || 'Unassigned';
+				positions[position] = (positions[position] || 0) + 1;
+			});
+			chart('departmentPositionChart', positions, '#4f7cac');
+		};
+		// Expand the selected summary bar inline. Department mode shows positions;
+		// Division mode shows departments within that division.
 		const updateSummaryPositionView = () => {
 			const divisionMode = summaryGroupMode() === 'division';
 			const parent = divisionMode ? 'division' : 'department';
-			const child = divisionMode ? 'departments' : 'job positions';
-			$('summaryPositionLabel').textContent = `${divisionMode ? 'Departments' : 'Job positions'} in selected ${parent}`;
-			const select = $('summaryDepartmentPositionSelect');
-			const groups = [...document.querySelectorAll('#summaryDepartmentChart .chart-row')].map(row => row.dataset.label);
-			const current = select.value;
-			select.replaceChildren(new Option(groups.length ? `Select a ${parent} above` : `No ${parent}s available`, ''));
-			select.disabled = !groups.length;
-			if (!groups.length) { $('summaryPositionChart').innerHTML = `<p class="report-note">No ${parent}s available.</p>`; return; }
-			const selected = groups.includes(current) ? current : '';
-			groups.forEach(group => select.append(new Option(group, group)));
-			select.value = selected;
-			if (!selected) { $('summaryPositionChart').innerHTML = `<p class="report-note">Select a ${parent} to view its ${child}.</p>`; return; }
+			const chartContainer = $('summaryDepartmentChart');
+			const groupRows = [...chartContainer.querySelectorAll(':scope > .chart-row')];
+			const groups = groupRows.map(row => row.dataset.label);
+			chartContainer.querySelector(':scope > .bar-detail-panel')?.remove();
+			if (!groups.includes(selectedSummaryGroupForPosition)) selectedSummaryGroupForPosition = '';
+			groupRows.forEach(row => {
+				const expanded = row.dataset.label === selectedSummaryGroupForPosition;
+				row.setAttribute('aria-expanded', String(expanded));
+				row.setAttribute('aria-label', `${expanded ? 'Hide' : 'Show'} ${divisionMode ? 'departments' : 'job positions'} for ${row.dataset.label}`);
+			});
+			if (!selectedSummaryGroupForPosition) return;
+			const selectedRow = groupRows.find(row => row.dataset.label === selectedSummaryGroupForPosition);
+			const detail = document.createElement('div');
+			detail.className = 'bar-detail-panel';
+			detail.innerHTML = `<div class="bar-detail-heading"><div class="bar-detail-title">${divisionMode ? 'Departments' : 'Job positions'} <span>in ${esc(selectedSummaryGroupForPosition)}</span></div><button type="button" class="secondary" data-view-chart-records="summaryDepartmentChart" data-view-chart-label="${esc(selectedSummaryGroupForPosition)}">View employee records</button></div><div id="summaryPositionChart"></div>`;
+			selectedRow.insertAdjacentElement('afterend', detail);
+			const selected = selectedSummaryGroupForPosition;
 			const terms = summarySubTerms();
 			const counts = {};
 			countableRows().forEach(row => {
@@ -752,16 +1139,17 @@
 			}
 			target.innerHTML = entries.map(([department, counts]) => {
 				const total = counts.male + counts.female + counts.other;
-				const maxTotal = Math.max(...entries.map(e => e[1].male + e[1].female + e[1].other));
 				const malePct = total ? (counts.male / total) * 100 : 0;
 				const femalePct = total ? (counts.female / total) * 100 : 0;
 				const otherPct = total ? (counts.other / total) * 100 : 0;
-				const widthPct = maxTotal ? Math.max(3, (total / maxTotal) * 100) : 0;
-				return `<div class="gender-department-row" data-chart="genderDepartmentChart" data-label="${esc(department)}" role="button" tabindex="0" aria-label="View records for ${esc(department)}">
-					<span>${esc(department)}</span>
-					<span class="gender-pair"><span class="gender-dot"></span> Male: <strong>${counts.male}</strong></span>
-					<span class="gender-pair"><span class="gender-dot female"></span> Female: <strong>${counts.female}</strong></span>
-					<div class="total-bar" style="width:${widthPct}%">
+				return `<div class="gender-department-row" data-chart="genderDepartmentChart" data-label="${esc(department)}" role="button" tabindex="0" aria-label="View ${total} records for ${esc(department)}: ${counts.male} male, ${counts.female} female, ${counts.other} other">
+					<div class="gender-department-heading"><span class="gender-department-name">${esc(department)}</span><span class="gender-department-total">${total.toLocaleString()} hires</span></div>
+					<div class="gender-counts">
+						<span class="gender-count"><i class="gender-dot male"></i><span>Male</span><strong>${counts.male.toLocaleString()}</strong></span>
+						<span class="gender-count"><i class="gender-dot female"></i><span>Female</span><strong>${counts.female.toLocaleString()}</strong></span>
+						<span class="gender-count"><i class="gender-dot other"></i><span>Other</span><strong>${counts.other.toLocaleString()}</strong></span>
+					</div>
+					<div class="total-bar" aria-hidden="true">
 						<span class="male-bar" style="width:${malePct}%"></span>
 						<span class="female-bar" style="width:${femalePct}%"></span>
 						<span class="other-bar" style="width:${otherPct}%"></span>
@@ -771,7 +1159,7 @@
 		};
 				const recordsForChart = (target, label) => {
 				if (target === 'summaryDepartmentChart') return countableRows().filter(row => summaryGroup(row) === label);
-				if (target === 'summaryPositionChart') { const group = $('summaryDepartmentPositionSelect').value; const terms = summarySubTerms(); return countableRows().filter(row => summaryGroup(row) === group && (fieldValue(row, terms) || 'Unassigned') === label); }
+				if (target === 'summaryPositionChart') { const group = selectedSummaryGroupForPosition; const terms = summarySubTerms(); return countableRows().filter(row => summaryGroup(row) === group && (fieldValue(row, terms) || 'Unassigned') === label); }
 				if (target.startsWith('summary')) {
 					const terms = target.includes('Department') ? ['department', 'new division', 'division'] : target.includes('Position') ? ['position', 'new designation/position', 'designation', 'job title', 'job'] : target.includes('Status') ? ['employment type', 'employment status'] : ['gender', 'sex'];
 					return countableRows().filter(row => (fieldValue(row, terms) || (terms[0].includes('department') ? 'Unassigned' : 'Unspecified')) === label);
@@ -788,7 +1176,7 @@
 					const trendRange = weekRange(label);
 					return trendRange ? countableRows().filter(row => rowDateInRange(row, ['hiring date', 'hire date'], trendRange)) : [];
 				}
-				if (target === 'departmentPositionChart') { const department = $('departmentPositionSelect').value; const terms = ['position', 'new designation/position', 'designation', 'job title', 'job']; return countableRows().filter(row => rowDateInRange(row, ['hiring date', 'hire date'], range) && fieldValue(row, ['department', 'new division', 'division']) === department && (fieldValue(row, terms) || 'Unassigned') === label); }
+				if (target === 'departmentPositionChart') { const department = selectedDepartmentForPosition; const terms = ['position', 'new designation/position', 'designation', 'job title', 'job']; return countableRows().filter(row => rowDateInRange(row, ['hiring date', 'hire date'], range) && (fieldValue(row, ['department', 'new division', 'division']) || 'Unassigned') === department && (fieldValue(row, terms) || 'Unassigned') === label); }
 				if (target === 'genderDepartmentChart') { return countableRows().filter(row => rowDateInRange(row, ['hiring date', 'hire date'], range) && (fieldValue(row, ['department', 'new division', 'division']) || 'Unassigned') === label); }
 				// Everything below is scoped by Hiring Date only, matching updateReports():
 				// an employee only counts toward the selected week if THEY were hired
@@ -815,7 +1203,7 @@
 			);
 			$('recordsCount').textContent = `${filtered.length} matching record${filtered.length === 1 ? '' : 's'}`;
 			$('recordsBody').innerHTML = filtered.length
-				? filtered.map(row => `<tr>${columns.map(column => `<td>${esc(formatCell(row[column], column))}</td>`).join('')}</tr>`).join('')
+				? filtered.map(row => `<tr>${columns.map((column, index) => `<td class="${tableColumnClass(column, index)}">${esc(formatCell(row[column], column, true))}</td>`).join('')}</tr>`).join('')
 				: `<tr><td class="empty" colspan="${columns.length || 1}">No records match the selected filters.</td></tr>`;
 		};
 		const refreshRecordsFilters = () => {
@@ -830,11 +1218,12 @@
 			// Keep repeated-looking rows visible in record details; the source rows are authoritative.
 			recordsDialogRows = matches.slice();
 			$('recordsTitle').textContent = title;
-			$('recordsHead').innerHTML = `<tr>${columns.map(column => `<th>${esc(column)}</th>`).join('')}</tr>`;
+			$('recordsHead').innerHTML = `<tr>${columns.map((column, index) => `<th class="${tableColumnClass(column, index)}">${esc(column)}</th>`).join('')}</tr>`;
 			refreshRecordsFilters();
 			$('recordsDepartmentFilter').value = '';
 			$('recordsGenderFilter').value = '';
 			renderRecordsDialog();
+			$('recordsDialog').querySelector('.table-wrap').scrollLeft = 0;
 			$('recordsDialog').showModal();
 		};
 			const showRecords = (target, label) => openRecordsDialog(label, recordsForChart(target, label));
@@ -873,9 +1262,11 @@
 			$('summaryTotal').textContent = summaryRows.length;
 			$('summaryComplete').textContent = complete;
 			$('summaryFields').textContent = columns.length;
+			$('summaryView').querySelector('[data-metric="summaryComplete"] .metric-label').textContent = is1CureSheet()
+				? 'all required fields filled'
+				: 'records with required employee fields filled';
 			const groupLabel = summaryGroupMode() === 'division' ? 'division' : 'department';
 			$('summaryGroupTitle').textContent = `All records by ${groupLabel}`;
-			$('summaryPositionLabel').textContent = `${groupLabel === 'division' ? 'Departments' : 'Job positions'} in selected ${groupLabel}`;
 			if (divisionMissing) {
 				$('summaryDepartmentChart').innerHTML = '<p class="report-note">No separate "DIVISION" column was found in this sheet.</p>';
 			} else {
@@ -992,27 +1383,59 @@
 			'PHILHEALTH NO.': ['PHILHEALTH NO.', 'PHILHEALTH NO', 'PHILHEALTH NUMBER'],
 			'SSS NO.': ['SSS NO.', 'SSS NO', 'SSS NUMBER'],
 			'PAGIBIG NO.': ['PAGIBIG NO.', 'PAGIBIG NO', 'PAG-IBIG NO.', 'PAG-IBIG NO', 'PAGIBIG NUMBER'],
-			'OVERALL MONTHLY COMPENSATION': ['OVERALL MONTHLY COMPENSATION', 'MONTHLY COMPENSATION', 'MONTHLY SALARY', 'COMPENSATION'],
 			'DATE OF 1ST EVAL': ['DATE OF 1ST EVAL', 'DATE OF FIRST EVAL', '1ST EVAL DATE'],
 			'DATE OF 2ND EVAL': ['DATE OF 2ND EVAL', 'DATE OF SECOND EVAL', '2ND EVAL DATE'],
 			'DATE OF REGULARIZATION': ['DATE OF REGULARIZATION', 'REGULARIZATION DATE']
+		};
+		const cureHeaderAliases = {
+			'#': ['#'],
+			'STATUS': ['STATUS'],
+			'NEW EMP #': ['NEW EMP #', 'NEW EMP', 'EMPLOYEE NUMBER', 'EMPLOYEE NO.', 'EMPLOYEE NO', 'EMPLOYEE ID', 'EMP #'],
+			'FULL NAME (Surname, First, Middle)': ['FULL NAME (Surname, First, Middle)', 'FULL NAME', 'EMPLOYEE NAME', 'NAME'],
+			'DESIGNATION/POSITION': ['DESIGNATION/POSITION', 'NEW DESIGNATION/POSITION', 'POSITION', 'DESIGNATION', 'JOB TITLE'],
+			'DEPARTMENT': ['DEPARTMENT', 'NEW DIVISION/DEPARTMENT'],
+			'BIRTHDAY (MM/DD/YYYY)': ['BIRTHDAY (MM/DD/YYYY)', 'BIRTHDAY', 'DATE OF BIRTH', 'DOB'],
+			'CONTACT NO.': ['CONTACT NO.', 'CONTACT NO', 'CONTACT NUMBER', 'MOBILE NO.', 'PHONE NUMBER'],
+			'EMAIL ADDRESS': ['EMAIL ADDRESS', 'EMAIL'],
+			'HIRING DATE': ['HIRING DATE', 'DATE HIRED', 'HIRE DATE'],
+			'YEAR HIRED': ['YEAR HIRED'],
+			'GENDER': ['GENDER', 'SEX'],
+			'EMPLOYMENT STATUS': ['EMPLOYMENT STATUS', 'EMPLOYMENT TYPE', 'EMPLOYEE STATUS'],
+			'COMPLETE ADDRESS': ['COMPLETE ADDRESS', 'ADDRESS', 'HOME ADDRESS'],
+			'TIN NO.': ['TIN NO.', 'TIN NO', 'TIN'],
+			'PHILHEALTH NO.': ['PHILHEALTH NO.', 'PHILHEALTH NO', 'PHILHEALTH NUMBER'],
+			'SSS NO.': ['SSS NO.', 'SSS NO', 'SSS NUMBER'],
+			'PAG-IBIG NO.': ['PAG-IBIG NO.', 'PAG-IBIG NO', 'PAGIBIG NO.', 'PAGIBIG NO', 'PAGIBIG NUMBER'],
+			'DATE OF 1ST EVAL': ['DATE OF 1ST EVAL', 'DATE OF FIRST EVAL', '1ST EVAL DATE'],
+			'DATE OF 2ND EVAL': ['DATE OF 2ND EVAL', 'DATE OF SECOND EVAL', '2ND EVAL DATE'],
+			'DATE OF REGULARIZATION': ['DATE OF REGULARIZATION', 'REGULARIZATION DATE'],
+			'ENCODED BY & DATE': ['ENCODED BY & DATE', 'ENCODED BY AND DATE']
 		};
 		const normalizedHeaderAliases = new Map();
 		Object.entries(headerAliases).forEach(([canonical, aliases]) => {
 			[canonical, ...aliases].forEach(alias => normalizedHeaderAliases.set(normalizeHeader(alias), canonical));
 		});
+		const normalizedCureHeaderAliases = new Map();
+		Object.entries(cureHeaderAliases).forEach(([canonical, aliases]) => {
+			[canonical, ...aliases].forEach(alias => normalizedCureHeaderAliases.set(normalizeHeader(alias), canonical));
+		});
 		const matchHeaderColumns = headerRow => {
+			const aliasesForSheet = is1CureSheet() ? cureHeaderAliases : headerAliases;
+			const normalizedAliasesForSheet = is1CureSheet() ? normalizedCureHeaderAliases : normalizedHeaderAliases;
+			const schemaColumns = is1CureSheet() ? cureColumns : defaultColumns;
 			const claimed = new Set();
 			const cells = headerRow.map((header, index) => ({ header, index, standard: null }));
 			cells.forEach(cell => {
 				const raw = String(cell.header ?? '').trim();
 				if (!raw || /^old\s+emp\s*#?$/i.test(raw)) return;
 				const normalized = normalizeHeader(raw);
-				let canonical = normalizedHeaderAliases.get(normalized);
+				let canonical = !normalized && is1CureSheet() && raw === '#'
+					? '#'
+					: normalized ? normalizedAliasesForSheet.get(normalized) : null;
 				// Accept harmless label variants such as a format suffix or punctuation.
 				if (!canonical) {
-					const possible = defaultColumns.filter(column => {
-						const aliases = headerAliases[column] || [column];
+					const possible = schemaColumns.filter(column => {
+						const aliases = aliasesForSheet[column] || [column];
 						return aliases.some(alias => {
 							const aliasNorm = normalizeHeader(alias);
 						return aliasNorm.length >= 5 && (normalized.includes(aliasNorm) || aliasNorm.includes(normalized));
@@ -1044,7 +1467,9 @@
 					return count + (normalizeHeader(original) === normalizeHeader(match.standard) ? 1 : 0);
 				}, 0);
 				const recognized = matches.length;
-				const anchorNames = new Set(['STATUS', 'EMPLOYEE NUMBER', 'LAST NAME', 'FIRST NAME', 'POSITION', 'DEPARTMENT', 'HIRING DATE', 'GENDER', 'EMPLOYMENT TYPE', 'PHILHEALTH NO.']);
+				const anchorNames = is1CureSheet()
+					? new Set(['STATUS', 'NEW EMP #', 'FULL NAME (Surname, First, Middle)', 'DEPARTMENT', 'HIRING DATE', 'EMPLOYMENT STATUS'])
+					: new Set(['STATUS', 'EMPLOYEE NUMBER', 'LAST NAME', 'FIRST NAME', 'POSITION', 'DEPARTMENT', 'HIRING DATE', 'GENDER', 'EMPLOYMENT TYPE', 'PHILHEALTH NO.']);
 				const anchorCount = matches.filter(match => anchorNames.has(match.standard)).length;
 				return { index, row, matches, exactCount, recognized, anchorCount };
 		}).filter(candidate => candidate.recognized > 0);
@@ -1071,9 +1496,9 @@
 			return { columns: [], rows: [] };
 		}
 
-		const importedColumns = cleanColumns(
-			headerCells.map(item => item.standard)
-		);
+		const importedColumns = is1CureSheet()
+			? [...cureColumns]
+			: cleanColumns(headerCells.map(item => item.standard));
 
 		const originalHeaderRow = Array.isArray(matrix[headerIndex]) ? matrix[headerIndex] : [];
 		const isHeaderLikeDataRow = row => {
@@ -1101,7 +1526,8 @@
 			// all other non-empty rows, including exact duplicate employee records.
 			if (nonEmpty.length === 1) {
 				const only = normalizeHeader(nonEmpty[0]);
-				return defaultColumns.some(column => normalizeHeader(column) === only);
+				const schemaColumns = is1CureSheet() ? cureColumns : defaultColumns;
+				return schemaColumns.some(column => normalizeHeader(column) === only);
 			}
 			return false;
 		};
@@ -1109,15 +1535,18 @@
 		const importedRows = matrix
 			.slice(headerIndex + 1)
 			.filter(row => !isHeaderLikeDataRow(row))
-			.map(row => Object.fromEntries(
-				importedColumns.map((column, index) => [
-					column,
-					Array.isArray(row) ? (row[headerCells[index].index] ?? '') : ''
-				])
-			))
+			.map((row, index) => Object.fromEntries(importedColumns.map((column, columnIndex) => {
+				const sourceHeader = is1CureSheet()
+					? headerCells.find(item => item.standard === column)
+					: headerCells[columnIndex];
+				let value = sourceHeader && Array.isArray(row) ? (row[sourceHeader.index] ?? '') : '';
+				if (is1CureSheet() && column === '#' && String(value).trim() === '') value = index + 1;
+				return [column, value];
+			})))
 			// Ignore genuinely blank rows, but never remove a row just because its values
 			// match another employee record.
-			.filter(row => Object.values(row).some(value => String(value ?? '').trim() !== ''));
+			.filter(row => (is1CureSheet() ? cureColumns.filter(column => column !== '#') : importedColumns)
+				.some(column => String(row[column] ?? '').trim() !== ''));
 
 		return { columns: importedColumns, rows: importedRows };
 		};
@@ -1132,10 +1561,28 @@
 		$('reportWeek').onchange = draw;
 		$('reportMonth').onchange = draw;
 		$('printReport').onclick = () => window.print();
+		const activateChartRow = row => {
+			if (row.dataset.chart === 'departmentChart') {
+				selectedDepartmentForPosition = selectedDepartmentForPosition === row.dataset.label ? '' : row.dataset.label;
+				updateDepartmentPositionView();
+				return;
+			}
+			if (row.dataset.chart === 'summaryDepartmentChart') {
+				selectedSummaryGroupForPosition = selectedSummaryGroupForPosition === row.dataset.label ? '' : row.dataset.label;
+				updateSummaryPositionView();
+				return;
+			}
+			showRecords(row.dataset.chart, row.dataset.label);
+		};
 		const openChartRecord = event => {
+			const recordsButton = event.target.closest('[data-view-chart-records]');
+			if (recordsButton) {
+				showRecords(recordsButton.dataset.viewChartRecords, recordsButton.dataset.viewChartLabel);
+				return;
+			}
 			const metricEl = event.target.closest('[data-metric]');
 			if (metricEl) { showMetricRecords(metricEl.dataset.metric); return; }
-			const row = event.target.closest('.chart-row, .gender-department-row'); if (!row) return; showRecords(row.dataset.chart, row.dataset.label);
+			const row = event.target.closest('.chart-row, .gender-department-row'); if (!row) return; activateChartRow(row);
 		};
 		$('reportView').onclick = openChartRecord; $('summaryView').onclick = openChartRecord;
 		document.addEventListener('keydown', event => {
@@ -1143,7 +1590,7 @@
 			if (event.target.dataset.metric) { event.preventDefault(); showMetricRecords(event.target.dataset.metric); return; }
 			if (!event.target.classList.contains('chart-row') && !event.target.classList.contains('gender-department-row')) return;
 			event.preventDefault();
-			showRecords(event.target.dataset.chart, event.target.dataset.label);
+			activateChartRow(event.target);
 		});
 		$('closeRecords').onclick = () => $('recordsDialog').close();
 		$('recordsDepartmentFilter').onchange = renderRecordsDialog;
@@ -1185,9 +1632,10 @@
 				refreshMainFilters();
 				sort = { key: '', dir: 1 };
 				const timeLabel = new Date().toLocaleTimeString();
+				const namedCount = countableRows().length;
 				$('syncNote').textContent = autoRefreshTimer
-					? `Loaded ${rows.length} row${rows.length === 1 ? '' : 's'} from ${currentSheetName} at ${timeLabel}. Auto-refreshing every ${AUTO_REFRESH_MS / 1000}s.`
-					: `Loaded ${rows.length} row${rows.length === 1 ? '' : 's'} from ${currentSheetName} at ${timeLabel}.`;
+					? `Loaded ${namedCount} employee record${namedCount === 1 ? '' : 's'} from ${currentSheetName} at ${timeLabel}. Auto-refreshing every ${AUTO_REFRESH_MS / 1000}s.`
+					: `Loaded ${namedCount} employee record${namedCount === 1 ? '' : 's'} from ${currentSheetName} at ${timeLabel}.`;
 				draw();
 				return true;
 			} catch (error) {
@@ -1211,11 +1659,11 @@
 			if (autoRefreshTimer) {
 				clearInterval(autoRefreshTimer);
 				autoRefreshTimer = null;
-				toggle.textContent = '▶️ Start auto-refresh';
+				toggle.textContent = 'Start auto-refresh';
 				$('syncNote').textContent = 'Auto-refresh stopped.';
 				return;
 			}
-			toggle.textContent = '⏸️ Stop auto-refresh';
+			toggle.textContent = 'Stop auto-refresh';
 			autoRefreshTimer = setInterval(() => loadFromSheet({ silent: true }), AUTO_REFRESH_MS);
 			loadFromSheet(); // refresh immediately when turning it on, not just after the first interval
 		};
@@ -1255,15 +1703,41 @@
 			document.querySelector('#summaryView').hidden = true;
 			loadFromSheet();
 		};
-		$('departmentPositionSelect').onchange = updateDepartmentPositionView;
-		$('summaryDepartmentPositionSelect').onchange = updateSummaryPositionView;
-		$('summaryGroupBy').onchange = () => { $('summaryDepartmentPositionSelect').value = ''; updateSummary(); };
+		$('summaryGroupBy').onchange = () => { selectedSummaryGroupForPosition = ''; updateSummary(); };
 		const orderFieldsForForm = cols => { const departmentIndex = cols.findIndex(isDepartmentField); const positionIndex = cols.findIndex(isPositionField); if (departmentIndex === -1 || positionIndex === -1 || departmentIndex < positionIndex) return cols; const reordered = cols.filter((_, i) => i !== departmentIndex); const newPositionIndex = reordered.findIndex(isPositionField); reordered.splice(newPositionIndex, 0, cols[departmentIndex]); return reordered; };
-		function openForm(index) { editing = index; const cols = columns.length ? columns : defaultColumns; columns = cols; const formCols = orderFieldsForForm(cols); const departmentColumn = cols.find(isDepartmentField); const initialDepartment = !departmentColumn ? '' : formatCell(rows[index]?.[departmentColumn], departmentColumn); const fields = $('fields'); fields.replaceChildren(...formCols.map(c => { const label = document.createElement('label'); label.dataset.field = c; label.textContent = c; const initialValue = formatCell(rows[index]?.[c], c); const context = isPositionField(c) ? { department: initialDepartment } : {}; label.append(createFieldControl(c, initialValue, context)); return label; })); const departmentLabel = [...fields.children].find(label => isDepartmentField(label.dataset.field)); departmentLabel?.querySelector('input, select')?.addEventListener('change', refreshPositionOptions); $('editor').showModal(); }
+		function openForm(index) {
+			editing = index;
+			const cols = columns.length ? columns : (is1CureSheet() ? cureColumns : defaultColumns);
+			columns = cols;
+			const formCols = orderFieldsForForm(is1CureSheet() ? cols.filter(column => column !== '#') : cols);
+			const departmentColumn = cols.find(isDepartmentField);
+			const initialDepartment = !departmentColumn ? '' : formatCell(rows[index]?.[departmentColumn], departmentColumn);
+			const fields = $('fields');
+			fields.replaceChildren(...formCols.map(column => {
+				const label = document.createElement('label');
+				label.dataset.field = column;
+				label.textContent = column;
+				const initialValue = formatCell(rows[index]?.[column], column);
+				const context = isPositionField(column) ? { department: initialDepartment } : {};
+				label.append(createFieldControl(column, initialValue, context));
+				return label;
+			}));
+			const departmentLabel = [...fields.children].find(label => isDepartmentField(label.dataset.field));
+			departmentLabel?.querySelector('input, select')?.addEventListener('change', refreshPositionOptions);
+			$('editor').showModal();
+		}
 		$('cancel').onclick = () => $('editor').close();
 		$('form').onsubmit = e => {
 			e.preventDefault();
-			const item = Object.fromEntries(new FormData(e.target));
+			const formValues = Object.fromEntries(new FormData(e.target));
+			const item = is1CureSheet()
+				? Object.fromEntries(columns.map(column => [
+					column,
+					column === '#'
+						? (rows[editing]?.[column] ?? (editing >= 0 ? editing + 1 : rows.length + 1))
+						: (formValues[column] ?? '')
+				]))
+				: formValues;
 			if (rows[editing]) rows[editing] = item;
 			$('editor').close();
 			draw();
