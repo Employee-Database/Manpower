@@ -1190,7 +1190,7 @@
 					return [];
 				}
 				if (target === 'dayChart') { return rows.filter(row => { const date = hiredThisWeek(row); return date && date.toLocaleDateString('en-US', { weekday: 'long', timeZone: 'UTC' }) === label; }); }
-				const terms = target === 'departmentChart' ? ['department', 'new division', 'division'] : target === 'statusChart' ? ['employment status', 'status'] : ['gender', 'sex'];
+				const terms = target === 'departmentChart' ? ['department', 'new division', 'division'] : target === 'statusChart' ? ['employment type', 'employment status', 'status'] : ['gender', 'sex'];
 				return rows.filter(row => hiredThisWeek(row) && (fieldValue(row, terms) || (target === 'departmentChart' ? 'Unassigned' : 'Unspecified')) === label);
 			};
 			let recordsDialogRows = [];
