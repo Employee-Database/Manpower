@@ -788,8 +788,8 @@
 			}
 			const namedVisible = view.filter(x => hasEmployeeName(x.r)).length;
 			$('stats').textContent = `${namedVisible} active employee${namedVisible === 1 ? '' : 's'}`;
-			$('head').innerHTML = columns.length ? `<tr>${columns.map((c, i) => `<th class="${tableColumnClass(c, i)}" data-key="${esc(c)}">${esc(c)} ${sort.key === c ? (sort.dir > 0 ? '▲' : '▼') : ''}</th>`).join('')}<th>Actions</th></tr>` : '';
-			$('body').innerHTML = view.length ? view.map(x => `<tr>${columns.map((c, i) => `<td class="${tableColumnClass(c, i)}">${esc(formatCell(x.r[c], c, true))}</td>`).join('')}<td class="actions"><button data-edit="${x.i}">Edit</button><button class="danger" data-delete="${x.i}">Delete</button></td></tr>`).join('') : `<tr><td class="empty" colspan="${columns.length + 1}">${rows.length ? (countableRows().length ? 'No matching employees.' : 'No named employee records to display.') : 'Click "Load from Google Sheet" to begin.'}</td></tr>`;
+			$('head').innerHTML = columns.length ? `<tr>${columns.map((c, i) => `<th class="${tableColumnClass(c, i)}" data-key="${esc(c)}">${esc(c)} ${sort.key === c ? (sort.dir > 0 ? '▲' : '▼') : ''}</th>`).join('')}</tr>` : '';
+			$('body').innerHTML = view.length ? view.map(x => `<tr>${columns.map((c, i) => `<td class="${tableColumnClass(c, i)}">${esc(formatCell(x.r[c], c, true))}</td>`).join('')}</tr>`).join('') : `<tr><td class="empty" colspan="${columns.length || 1}">${rows.length ? (countableRows().length ? 'No matching employees.' : 'No named employee records to display.') : 'Click "Load from Google Sheet" to begin.'}</td></tr>`;
 			updateReports();
 			updateDepartmentPositionView();
 			updateSummary();
