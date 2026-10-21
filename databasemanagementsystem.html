@@ -602,7 +602,6 @@
 			<div class="toolbar source-actions">
 				<button id="loadSheet" class="secondary">Load from Google Sheet</button>
 				<button id="autoRefreshToggle" class="secondary">Start auto-refresh</button>
-				<button id="clear" class="secondary">Clear data</button>
 				<p id="syncNote" class="hint sync-note">Data loads directly from your connected Google Sheet.</p>
 			</div>
 		</section>
@@ -1143,7 +1142,7 @@
 				const femalePct = total ? (counts.female / total) * 100 : 0;
 				const otherPct = total ? (counts.other / total) * 100 : 0;
 				return `<div class="gender-department-row" data-chart="genderDepartmentChart" data-label="${esc(department)}" role="button" tabindex="0" aria-label="View ${total} records for ${esc(department)}: ${counts.male} male, ${counts.female} female, ${counts.other} other">
-					<div class="gender-department-heading"><span class="gender-department-name">${esc(department)}</span><span class="gender-department-total">${total.toLocaleString()} hires</span></div>
+					<div class="gender-department-heading"><span class="gender-department-name">${esc(department)}</span><span class="gender-department-total">${total.toLocaleString()} hire/s</span></div>
 					<div class="gender-counts">
 						<span class="gender-count"><i class="gender-dot male"></i><span>Male</span><strong>${counts.male.toLocaleString()}</strong></span>
 						<span class="gender-count"><i class="gender-dot female"></i><span>Female</span><strong>${counts.female.toLocaleString()}</strong></span>
@@ -1742,7 +1741,7 @@
 			$('editor').close();
 			draw();
 		};
-		$('clear').onclick = () => { if (rows.length && confirm(`Clear the currently loaded ${currentSheetName} data?`)) { rows = []; columns = []; $('syncNote').textContent = ''; draw(); } }; draw(); loadFromSheet();
+		draw(); loadFromSheet();
 	</script>
 </body>
 </html>
