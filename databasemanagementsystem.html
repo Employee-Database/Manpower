@@ -15,6 +15,7 @@
 		.brand-logo { display: block; height: 60px; width: auto; flex: 0 0 auto; }
 		header h1 { margin: 0 0 5px; font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.6rem, 3vw, 2.35rem); letter-spacing: .01em; }
 		header p { margin: 0; color: #c7dce1; font-size: .96rem; }
+		.privacy-link { color: #d6e8eb; font-size: .9rem; font-weight: 600; text-underline-offset: 3px; }
 		main { max-width: 1480px; margin: 28px auto; padding: 0 22px; }
 		.panel { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 10px; padding: 22px; margin-bottom: 20px; box-shadow: 0 8px 26px var(--panel-shadow); }
 		.toolbar { display: flex; flex-wrap: wrap; gap: 11px; align-items: center; }
@@ -571,6 +572,7 @@
 					<p>Connecting Filipinos to Better Health</p>
 				</div>
 			</div>
+			<a class="privacy-link" href="privacy-policy.html">Privacy policy</a>
 		</div>
 	</header>
 	<main class="app-shell">
@@ -600,9 +602,10 @@
 				
 			</div>
 			<div class="toolbar source-actions">
-				<button id="loadSheet" class="secondary">Load from Google Sheet</button>
-				<button id="autoRefreshToggle" class="secondary">Start auto-refresh</button>
-				<p id="syncNote" class="hint sync-note">Data loads directly from your connected Google Sheet.</p>
+				<button id="loadSheet" class="secondary" type="button">Sign in with Google</button>
+				<button id="googleSignOut" class="secondary" type="button" hidden>Sign out</button>
+				<button id="autoRefreshToggle" class="secondary" type="button" disabled>Start auto-refresh</button>
+				<p id="syncNote" class="hint sync-note">Sign in with Google to load the private employee sheet.</p>
 			</div>
 		</section>
 		<section class="panel data-view table-panel">
@@ -675,21 +678,41 @@
 						<button type="button" class="secondary" id="clearRecordsFilters">Clear filters</button>
 					</div>
 				</div><button type="button" class="secondary" id="closeRecords">Close</button></div><div class="table-wrap"><table><thead id="recordsHead"></thead><tbody id="recordsBody"></tbody></table></div></div></dialog>
+	<script src="https://accounts.google.com/gsi/client"></script>
 	<script>
 		const $ = id => document.getElementById(id);
 
 		// ---- Google Sheets API connection ----
-		const SHEETS_API_KEY = 'AIzaSyDJl8EhaIUTUJHrVvrkCUuDJx44grK0BJM';
+		// Add a Google Cloud OAuth web client ID. Authorize this site's origin in that client.
+		const GOOGLE_OAUTH_CLIENT_ID = '9264428432-7oo9n65q713o2a6o5bdv818lvid290p6.apps.googleusercontent.com';
+		const GOOGLE_SHEETS_SCOPE = 'https://www.googleapis.com/auth/spreadsheets.readonly';
 		const SPREADSHEET_ID = '1fTae243E9FuG51BSol52Pf8wQZ211jnieYX4M4l7PFU';
+		const PRIVATE_SHEET_ACCESS_MESSAGE = 'Google denied access. Confirm the Google account you signed in with has Viewer access to this spreadsheet.';
+		const GOOGLE_SIGN_IN_REQUIRED_MESSAGE = 'Your Google access has expired. Sign in again to continue.';
+		let googleTokenClient = null;
+		let googleAccessToken = '';
+		let googleTokenExpiresAt = 0;
+		let googleAuthPending = false;
+		let loadAfterGoogleAuth = false;
 		let currentSheetName = 'ACTIVE MASTERLIST';
-		const SHEET_METADATA_URL = () => `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}?fields=sheets.properties(sheetId,title)&key=${SHEETS_API_KEY}`;
+		const SHEET_METADATA_URL = () => `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}?fields=sheets.properties(sheetId,title)`;
 		const normalizeSheetTitle = value => String(value ?? '').replace(/\u00A0/g, ' ').trim().toLocaleUpperCase();
 		const is1CureSheet = () => normalizeSheetTitle(currentSheetName) === '1CURE EMPLOYEES';
-		const getActualSheetTitle = async () => {
-			const metadataResponse = await fetch(`${SHEET_METADATA_URL()}&_=${Date.now()}`, { cache: 'no-store' });
+		const hasGoogleAccess = () => Boolean(googleAccessToken) && googleTokenExpiresAt > Date.now() + 15000;
+		const getGoogleApiHeaders = (accessToken = googleAccessToken) => ({ Authorization: `Bearer ${accessToken}` });
+		const getActualSheetTitle = async (accessToken = googleAccessToken) => {
+			const metadataResponse = await fetch(`${SHEET_METADATA_URL()}&_=${Date.now()}`, { cache: 'no-store', headers: getGoogleApiHeaders(accessToken) });
 			const metadata = await metadataResponse.json().catch(() => ({}));
 			if (!metadataResponse.ok) {
-				throw new Error(metadata?.error?.message || `Could not read spreadsheet tab names (HTTP ${metadataResponse.status}). Check that the Sheets API is enabled and the API key has access.`);
+				if (metadataResponse.status === 401) {
+					if (googleAccessToken === accessToken) {
+						googleAccessToken = '';
+						googleTokenExpiresAt = 0;
+					}
+					throw new Error(GOOGLE_SIGN_IN_REQUIRED_MESSAGE);
+				}
+				if (metadataResponse.status === 403) throw new Error(PRIVATE_SHEET_ACCESS_MESSAGE);
+				throw new Error(metadata?.error?.message || `Could not read spreadsheet tab names (HTTP ${metadataResponse.status}). Check that the Google Sheets API is enabled in the OAuth Cloud project.`);
 			}
 			const sheets = (metadata.sheets || []).map(item => item.properties).filter(Boolean);
 			const wanted = normalizeSheetTitle(currentSheetName);
@@ -702,7 +725,7 @@
 		};
 		const SHEETS_API_URL = actualTitle => {
 			const a1Range = "'" + String(actualTitle).replace(/'/g, "''") + "'!A1:AZ5000";
-			return `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${encodeURIComponent(a1Range)}?valueRenderOption=UNFORMATTED_VALUE&dateTimeRenderOption=SERIAL_NUMBER&key=${SHEETS_API_KEY}`;
+			return `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${encodeURIComponent(a1Range)}?valueRenderOption=UNFORMATTED_VALUE&dateTimeRenderOption=SERIAL_NUMBER`;
 		};
 
 		const defaultColumns = [
@@ -788,7 +811,7 @@
 			const namedVisible = view.filter(x => hasEmployeeName(x.r)).length;
 			$('stats').textContent = `${namedVisible} active employee${namedVisible === 1 ? '' : 's'}`;
 			$('head').innerHTML = columns.length ? `<tr>${columns.map((c, i) => `<th class="${tableColumnClass(c, i)}" data-key="${esc(c)}">${esc(c)} ${sort.key === c ? (sort.dir > 0 ? '▲' : '▼') : ''}</th>`).join('')}</tr>` : '';
-			$('body').innerHTML = view.length ? view.map(x => `<tr>${columns.map((c, i) => `<td class="${tableColumnClass(c, i)}">${esc(formatCell(x.r[c], c, true))}</td>`).join('')}</tr>`).join('') : `<tr><td class="empty" colspan="${columns.length || 1}">${rows.length ? (countableRows().length ? 'No matching employees.' : 'No named employee records to display.') : 'Click "Load from Google Sheet" to begin.'}</td></tr>`;
+			$('body').innerHTML = view.length ? view.map(x => `<tr>${columns.map((c, i) => `<td class="${tableColumnClass(c, i)}">${esc(formatCell(x.r[c], c, true))}</td>`).join('')}</tr>`).join('') : `<tr><td class="empty" colspan="${columns.length || 1}">${rows.length ? (countableRows().length ? 'No matching employees.' : 'No named employee records to display.') : 'Sign in with Google to load employee data.'}</td></tr>`;
 			updateReports();
 			updateDepartmentPositionView();
 			updateSummary();
@@ -1604,25 +1627,111 @@
 		// ---- Load from Google Sheet (via Sheets API v4), with optional auto-refresh polling ----
 		const AUTO_REFRESH_MS = 60000; // how often to poll while auto-refresh is on
 		let autoRefreshTimer = null;
+		const stopAutoRefresh = () => {
+			if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+			autoRefreshTimer = null;
+			$('autoRefreshToggle').textContent = 'Start auto-refresh';
+			$('autoRefreshToggle').disabled = !hasGoogleAccess();
+		};
+		const updateGoogleAuthControls = () => {
+			const configured = Boolean(GOOGLE_OAUTH_CLIENT_ID.trim());
+			const connected = hasGoogleAccess();
+			$('loadSheet').textContent = googleAuthPending ? 'Connecting…' : connected ? 'Load from Google Sheet' : 'Sign in with Google';
+			$('loadSheet').disabled = googleAuthPending || !configured || !googleTokenClient;
+			$('googleSignOut').hidden = !googleAccessToken;
+			$('autoRefreshToggle').disabled = !connected && !autoRefreshTimer;
+		};
+		const initializeGoogleOAuth = () => {
+			if (!GOOGLE_OAUTH_CLIENT_ID.trim()) {
+				$('syncNote').textContent = 'Set GOOGLE_OAUTH_CLIENT_ID to a Google OAuth web client ID. Register https://employee-database.github.io as an authorized JavaScript origin and enable the Sheets API. For local testing, serve this page from localhost and register that origin; Google OAuth cannot run from a file:// page.';
+				updateGoogleAuthControls();
+				return false;
+			}
+			if (!window.google?.accounts?.oauth2) {
+				$('syncNote').textContent = 'Google sign-in could not initialize. Check your connection and reload this page.';
+				updateGoogleAuthControls();
+				return false;
+			}
+			googleTokenClient = window.google.accounts.oauth2.initTokenClient({
+				client_id: GOOGLE_OAUTH_CLIENT_ID.trim(),
+				scope: GOOGLE_SHEETS_SCOPE,
+				callback: response => {
+					googleAuthPending = false;
+					if (!response || response.error || !response.access_token) {
+						loadAfterGoogleAuth = false;
+						$('syncNote').textContent = response?.error_description || response?.error || 'Google sign-in did not return an access token. Try again.';
+						updateGoogleAuthControls();
+						return;
+					}
+					if (!window.google.accounts.oauth2.hasGrantedAllScopes(response, GOOGLE_SHEETS_SCOPE)) {
+						loadAfterGoogleAuth = false;
+						$('syncNote').textContent = 'Read-only Google Sheets access was not granted. Sign in again and approve the requested access to load this sheet.';
+						updateGoogleAuthControls();
+						return;
+					}
+					googleAccessToken = response.access_token;
+					googleTokenExpiresAt = Date.now() + (Number(response.expires_in) || 3600) * 1000;
+					updateGoogleAuthControls();
+					$('syncNote').textContent = 'Google access granted. Loading the employee sheet…';
+					if (loadAfterGoogleAuth) {
+						loadAfterGoogleAuth = false;
+						loadFromSheet();
+					}
+				},
+				error_callback: error => {
+					googleAuthPending = false;
+					loadAfterGoogleAuth = false;
+					$('syncNote').textContent = error?.type === 'popup_closed'
+						? 'Google sign-in was closed before access was granted. Click Sign in with Google to try again.'
+						: 'Google sign-in could not open. Allow pop-ups for this site and try again.';
+					updateGoogleAuthControls();
+				}
+			});
+			$('syncNote').textContent = 'Sign in with a Google account that has Viewer access to the private employee spreadsheet.';
+			updateGoogleAuthControls();
+			return true;
+		};
+		const requestGoogleAccess = () => {
+			if (!googleTokenClient && !initializeGoogleOAuth()) return;
+			if (googleAuthPending) return;
+			googleAuthPending = true;
+			updateGoogleAuthControls();
+			$('syncNote').textContent = 'Waiting for Google sign-in…';
+			try {
+				if (googleAccessToken) googleTokenClient.requestAccessToken();
+				else googleTokenClient.requestAccessToken({ prompt: 'select_account' });
+			} catch (error) {
+				googleAuthPending = false;
+				$('syncNote').textContent = `Could not start Google sign-in: ${error.message}`;
+				updateGoogleAuthControls();
+			}
+		};
 
 		const loadFromSheet = async ({ silent = false } = {}) => {
 			const button = $('loadSheet');
-			const originalLabel = button.textContent;
+			const accessToken = googleAccessToken;
 			if (!silent) { button.disabled = true; button.textContent = 'Loading…'; }
 			try {
+				if (!hasGoogleAccess()) throw new Error(GOOGLE_SIGN_IN_REQUIRED_MESSAGE);
 				// A cache-busting query param forces a fresh request through the browser's
 				// own cache. The Sheets API itself always reads the live sheet — there's
 				// no publish-to-web style server-side cache to fight here.
-				const actualSheetTitle = await getActualSheetTitle();
-				const response = await fetch(`${SHEETS_API_URL(actualSheetTitle)}&_=${Date.now()}`, { cache: 'no-store' });
+				const actualSheetTitle = await getActualSheetTitle(accessToken);
+				const response = await fetch(`${SHEETS_API_URL(actualSheetTitle)}&_=${Date.now()}`, { cache: 'no-store', headers: getGoogleApiHeaders(accessToken) });
 				if (!response.ok) {
 					const body = await response.json().catch(() => null);
-					if (response.status === 401 || response.status === 403) {
-						throw new Error('Google denied access to this sheet. Set the spreadsheet sharing to "Anyone with the link" as Viewer, and confirm the Sheets API is enabled for this API key.');
+					if (response.status === 401) {
+						if (googleAccessToken === accessToken) {
+							googleAccessToken = '';
+							googleTokenExpiresAt = 0;
+						}
+						throw new Error(GOOGLE_SIGN_IN_REQUIRED_MESSAGE);
 					}
+					if (response.status === 403) throw new Error(PRIVATE_SHEET_ACCESS_MESSAGE);
 					throw new Error(body?.error?.message || `Sheets API request failed (HTTP ${response.status})`);
 				}
 				const json = await response.json();
+				if (googleAccessToken !== accessToken || !hasGoogleAccess()) return false;
 				const matrix = json.values || [];
 				const parsed = rowsFromMatrix(matrix);
 				if (!parsed.columns.length) throw new Error('No matching columns found in the sheet. Check the header row.');
@@ -1638,28 +1747,62 @@
 				draw();
 				return true;
 			} catch (error) {
+				if (!hasGoogleAccess()) {
+					googleAccessToken = '';
+					googleTokenExpiresAt = 0;
+					if (autoRefreshTimer) stopAutoRefresh();
+					updateGoogleAuthControls();
+				}
 				if (silent) {
-					// Don't interrupt with an alert on background polls — just surface it quietly
-					// and keep whatever data is already on screen.
-					$('syncNote').textContent = `Auto-refresh failed at ${new Date().toLocaleTimeString()}: ${error.message}`;
+					// Keep startup and background refresh failures visible without a blocking alert.
+					const context = autoRefreshTimer ? 'Auto-refresh failed' : 'Could not load the Google Sheet';
+					$('syncNote').textContent = `${context} at ${new Date().toLocaleTimeString()}: ${error.message}`;
 				} else {
+					$('syncNote').textContent = `Could not load the Google Sheet: ${error.message}`;
 					alert(`Could not load the Google Sheet: ${error.message}`);
 				}
 				return false;
 			} finally {
-				if (!silent) { button.disabled = false; button.textContent = originalLabel; }
+				if (!silent) updateGoogleAuthControls();
 			}
 		};
 
-		$('loadSheet').onclick = () => loadFromSheet();
+		$('loadSheet').onclick = () => {
+			if (!hasGoogleAccess()) {
+				loadAfterGoogleAuth = true;
+				requestGoogleAccess();
+				return;
+			}
+			loadFromSheet();
+		};
+		$('googleSignOut').onclick = () => {
+			const token = googleAccessToken;
+			stopAutoRefresh();
+			googleAccessToken = '';
+			googleTokenExpiresAt = 0;
+			rows = [];
+			columns = [];
+			$('search').value = '';
+			$('departmentFilter').value = '';
+			$('genderFilter').value = '';
+			sort = { key: '', dir: 1 };
+			draw();
+			$('syncNote').textContent = 'Signed out. Employee records were cleared from this page.';
+			updateGoogleAuthControls();
+			if (token && window.google?.accounts?.oauth2?.revoke) {
+				window.google.accounts.oauth2.revoke(token, () => {});
+			}
+		};
 
 		$('autoRefreshToggle').onclick = () => {
 			const toggle = $('autoRefreshToggle');
 			if (autoRefreshTimer) {
-				clearInterval(autoRefreshTimer);
-				autoRefreshTimer = null;
-				toggle.textContent = 'Start auto-refresh';
+				stopAutoRefresh();
 				$('syncNote').textContent = 'Auto-refresh stopped.';
+				return;
+			}
+			if (!hasGoogleAccess()) {
+				$('syncNote').textContent = GOOGLE_SIGN_IN_REQUIRED_MESSAGE;
 				return;
 			}
 			toggle.textContent = 'Stop auto-refresh';
@@ -1741,7 +1884,8 @@
 			$('editor').close();
 			draw();
 		};
-		draw(); loadFromSheet();
+		initializeGoogleOAuth();
+		draw();
 	</script>
 </body>
 </html>
